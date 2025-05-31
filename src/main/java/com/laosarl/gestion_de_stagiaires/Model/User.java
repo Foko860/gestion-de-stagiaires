@@ -1,7 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.Model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,14 +25,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,length = 100)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 254)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 }
 
 

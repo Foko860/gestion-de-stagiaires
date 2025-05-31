@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: gestion-de-stagiares
+
+  datasource:
+    url: "jdbc:postgresql://localhost:5434/gestion-de-stage"
+    username: "root"
+    password: "F@KO1ALK"
+    driver-class-name: "org.postgresql.Driver"
+  jpa:
+    hibernate:
+      ddl-auto: "update"
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+server:
+  port: 8185

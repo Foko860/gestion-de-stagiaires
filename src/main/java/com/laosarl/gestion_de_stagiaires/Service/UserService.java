@@ -16,9 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
 
     public User createUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -51,10 +49,12 @@ public class UserService {
                 userRepository.existsByEmail(userDetails.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
-
+        if (userDetails.getUsername() != null) {
         user.setUsername(userDetails.getUsername());
+        }
+        if (userDetails.getEmail() != null) {
         user.setEmail(userDetails.getEmail());
-        user.setPassword(userDetails.getPassword());
+        }
 
         return userRepository.save(user);
     }

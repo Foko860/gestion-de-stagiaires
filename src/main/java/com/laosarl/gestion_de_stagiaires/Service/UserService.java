@@ -58,7 +58,7 @@ public class UserService {
 
         //TODO: Translate in english
         if (user.getUsername().equals(userDetails.getUsername())) {
-            throw new RuntimeException("C'est deja ton username");
+            throw new RuntimeException("it is already your username");
         }
 
         if (!user.getEmail().equals(userDetails.getEmail()) &&

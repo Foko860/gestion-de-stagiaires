@@ -45,6 +45,7 @@ public class UserService {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
+
         verification(userDetails, user);
         UserMapper.update(userDetails, user);
 

@@ -2,6 +2,11 @@ package com.laosarl.gestion_de_stagiaires.Controller;
 
 import com.laosarl.gestion_de_stagiaires.Model.User;
 import com.laosarl.gestion_de_stagiaires.Service.UserService;
+import com.laosarl.internship_management.api.UserApi;
+import com.laosarl.internship_management.model.AuthRequestDTO;
+import com.laosarl.internship_management.model.RegistrationRequestDTO;
+import com.laosarl.internship_management.model.TokenDTO;
+import com.laosarl.internship_management.model.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserApi {
 
     private final UserService userService;
 
@@ -52,5 +57,20 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> createUser(RegistrationRequestDTO registrationRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<UserDTO> getCurrentUser() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<TokenDTO> login(AuthRequestDTO authRequestDTO) {
+        return null;
     }
 }

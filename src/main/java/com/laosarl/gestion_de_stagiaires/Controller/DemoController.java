@@ -17,7 +17,7 @@ public class DemoController {
 
     private final DemoService demoService;
 
-    // Endpoint to create a ne00w Demo
+    // Endpoint to create a new Demo
     @PostMapping
     public ResponseEntity<Demo> createDemo(@RequestBody Demo demo) {
         return ResponseEntity

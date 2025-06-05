@@ -3,6 +3,8 @@ package com.laosarl.gestion_de_stagiaires.Service;
 import com.laosarl.gestion_de_stagiaires.Model.User;
 import com.laosarl.gestion_de_stagiaires.Repository.UserRepository;
 import com.laosarl.gestion_de_stagiaires.Service.mapper.UserMapper;
+import com.laosarl.internship_management.model.UserRequestDTO;
+import com.laosarl.internship_management.model.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,19 +18,23 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
+        //User user = UserMapper.toResponseDTO(User user);
 
     @Transactional
     public User createUser(User user) {
+
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
+
+        // TODO: encode password if needed
+        // user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
-
     //TODO: remove the field password
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {

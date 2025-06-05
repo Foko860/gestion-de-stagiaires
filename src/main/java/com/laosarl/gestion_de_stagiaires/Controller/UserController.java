@@ -2,75 +2,59 @@ package com.laosarl.gestion_de_stagiaires.Controller;
 
 import com.laosarl.gestion_de_stagiaires.Model.User;
 import com.laosarl.gestion_de_stagiaires.Service.UserService;
+import com.laosarl.gestion_de_stagiaires.Service.mapper.UserMapper;
 import com.laosarl.internship_management.api.UserApi;
-import com.laosarl.internship_management.model.AuthRequestDTO;
-import com.laosarl.internship_management.model.RegistrationRequestDTO;
-import com.laosarl.internship_management.model.TokenDTO;
-import com.laosarl.internship_management.model.UserDTO;
+import com.laosarl.internship_management.model.UserRequestDTO;
+import com.laosarl.internship_management.model.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController implements UserApi {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-
+    @Override
+    public ResponseEntity<UserResponseDTO> createUser(UserRequestDTO userRequestDTO) {
+        // Conversion DTO -> Entity dans le contrôleur
+        User user = UserMapper.fromRequestDTO(userRequestDTO);
+        User savedUser = userService.createUser(user);
         return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(userService.createUser(user));
+                .status(201)
+                .body(UserMapper.toResponseDTO(savedUser));
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    @Override
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.getAllUsers().stream()
+                .map(UserMapper::toResponseDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    @Override
+    public ResponseEntity<UserResponseDTO> getUserById(Long id) {
         return userService.getUserById(id)
-                .map(ResponseEntity::ok)
+                .map(user -> ResponseEntity.ok(UserMapper.toResponseDTO(user)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
+    @Override
+    public ResponseEntity<UserResponseDTO> updateUser(Long id, UserRequestDTO userRequestDTO) {
+        // Conversion DTO -> Entity dans le contrôleur
+        User updatedUserEntity = UserMapper.fromRequestDTO(userRequestDTO);
+        User updatedUser = userService.updateUser(id, updatedUserEntity);
+        return ResponseEntity.ok(UserMapper.toResponseDTO(updatedUser));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @Override
+    public ResponseEntity<Void> deleteUser(Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> createUser(RegistrationRequestDTO registrationRequestDTO) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<UserDTO> getCurrentUser() {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<TokenDTO> login(AuthRequestDTO authRequestDTO) {
-        return null;
     }
 }

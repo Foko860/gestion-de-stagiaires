@@ -3,7 +3,7 @@ spring:
     name: gestion-de-stagiares
 
   datasource:
-    url: "jdbc:postgresql://localhost:5434/gestion-de-stage"
+    url: "jdbc:postgresql://localhost:5435/gestion-de-stage"
     username: "root"
     password: "F@KO1ALK"
     driver-class-name: "org.postgresql.Driver"
@@ -14,4 +14,6 @@ spring:
       hibernate:
         dialect: "org.hibernate.dialect.PostgreSQLDialect"
 server:
+  servlet:
+    context-path: /api/internship-management/v1
   port: 8185

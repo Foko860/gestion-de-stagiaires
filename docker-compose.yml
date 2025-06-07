@@ -1,0 +1,36 @@
+
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: stage_postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: F@KO1ALK
+      POSTGRES_DB: gestion-de-stage
+    ports:
+      - "5435:5432"  # Port 5434 sur votre machine → 5432 dans le container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d gestion-de-stage"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: stage-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@stage.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"  # pgAdmin accessible sur http://localhost:5050
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

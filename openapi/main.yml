@@ -139,6 +139,112 @@ paths:
         '400':
           description: Bad request
 
+  /students:
+    post:
+      tags:
+        - Student
+      summary: Create a new student
+      operationId: createStudent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentRequestDTO'
+      responses:
+        '201':
+          description: Student successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponseDTO'
+        '400':
+          description: Invalid request
+
+    get:
+      tags:
+        - Student
+      summary: Get all students
+      operationId: getAllStudents
+      responses:
+        '200':
+          description: List of all students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentResponseDTO'
+
+  /students/{id}:
+    get:
+      tags:
+        - Student
+      summary: Get a student by ID
+      operationId: getStudentById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Student found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponseDTO'
+        '404':
+          description: Student not found
+
+    put:
+      tags:
+        - Student
+      summary: Update a student
+      operationId: updateStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentRequestDTO'
+      responses:
+        '200':
+          description: Student updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResponseDTO'
+        '404':
+          description: Student not found
+
+    delete:
+      tags:
+        - Student
+      summary: Delete a student
+      operationId: deleteStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Student successfully deleted
+        '404':
+          description: Student not found
+
 components:
   schemas:
     UserRequestDTO:
@@ -200,12 +306,10 @@ components:
         username:
           type: string
           example: johndoe
-          description: The user's username or email
         password:
           type: string
           format: password
           example: mySecret123
-          description: The user's password
 
     LoginResponseDTO:
       type: object
@@ -213,7 +317,6 @@ components:
         token:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-          description: JWT authentication token
         userId:
           type: integer
           format: int64
@@ -221,3 +324,85 @@ components:
         username:
           type: string
           example: johndoe
+
+    StudentRequestDTO:
+      type: object
+      required:
+        - username
+        - password
+        - email
+        - studyLevel
+        - speciality
+        - university
+      properties:
+        username:
+          type: string
+          example: aurellefoko
+        password:
+          type: string
+          format: password
+          example: motdepasse123
+        email:
+          type: string
+          format: email
+          example: aurelle@example.com
+        firstName:
+          type: string
+          example: Aurelle
+        lastName:
+          type: string
+          example: Foko
+        studyLevel:
+          type: string
+          example: Licence 3
+        speciality:
+          type: string
+          example: Informatique
+        university:
+          type: string
+          example: UCAC-ICAM
+        registrationDate:
+          type: string
+          format: date
+          example: 2024-09-01
+
+    StudentResponseDTO:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - studyLevel
+        - speciality
+        - university
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 101
+        username:
+          type: string
+          example: aurellefoko
+        email:
+          type: string
+          format: email
+          example: aurelle@example.com
+        firstName:
+          type: string
+          example: Aurelle
+        lastName:
+          type: string
+          example: Foko
+        studyLevel:
+          type: string
+          example: Licence 3
+        speciality:
+          type: string
+          example: Informatique
+        university:
+          type: string
+          example: UCAC-ICAM
+        registrationDate:
+          type: string
+          format: date
+          example: 2024-09-01

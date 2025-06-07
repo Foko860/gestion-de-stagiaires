@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
 
+    // Garde la même implémentation
     public Student createStudent(Student student) {
         return studentRepository.save(student);
     }
@@ -26,15 +28,13 @@ public class StudentService {
     }
 
     @Transactional(readOnly = true)
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+    public Optional<Student> getStudentById(Long id) { // Changement pour retourner Optional
+        return studentRepository.findById(id);
     }
 
     public Student updateStudent(Long id, Student newData) {
         Student existing = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-
         StudentMapper.update(newData, existing);
         return studentRepository.save(existing);
     }

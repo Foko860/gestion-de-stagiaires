@@ -8,6 +8,78 @@ servers:
   - url: http://localhost:8185/api/internship-management/v1
 
 paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: authenticate user
+      description: get access token after identified the user
+      operationId: loginUserAuth
+      requestBody:
+        description: data that contain the credentials of the user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequestDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenDTO'
+  /auth/register/student:
+    post:
+      tags:
+        - Auth
+      summary: Create a new user
+      description: Create a new user
+      operationId: createStudentAuth
+      requestBody:
+        description: data that need to be use for create User
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentRegistrationRequestDTO'
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentIdResponseDTO'
+  /auth/user:
+    get:
+      tags:
+        - Auth
+      summary: get current User
+      description: get current User
+      operationId: getCurrentStudentAuth
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentDTO'
+    put:
+      tags:
+        - Auth
+      summary: update an user
+      description: update an user
+      operationId: updateUserAuth
+      requestBody:
+        description: Data that will be used to modify the user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDTO'
+      responses:
+        204:
+          description: successful operation
   /users:
     post:
       tags:
@@ -150,17 +222,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StudentRequestDTO'
+              $ref: '#/components/schemas/CreateStudentRequestDTO'
       responses:
         '201':
           description: Student successfully created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudentResponseDTO'
+                $ref: '#/components/schemas/StudentIdResponseDTO'
         '400':
           description: Invalid request
-
     get:
       tags:
         - Student
@@ -175,7 +246,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StudentResponseDTO'
-
   /students/{id}:
     get:
       tags:
@@ -198,7 +268,6 @@ paths:
                 $ref: '#/components/schemas/StudentResponseDTO'
         '404':
           description: Student not found
-
     put:
       tags:
         - Student
@@ -216,7 +285,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StudentRequestDTO'
+              $ref: '#/components/schemas/CreateStudentRequestDTO'
       responses:
         '200':
           description: Student updated successfully
@@ -226,7 +295,6 @@ paths:
                 $ref: '#/components/schemas/StudentResponseDTO'
         '404':
           description: Student not found
-
     delete:
       tags:
         - Student
@@ -324,11 +392,9 @@ components:
         username:
           type: string
           example: johndoe
-
-    StudentRequestDTO:
+    CreateStudentRequestDTO:
       type: object
       required:
-        - username
         - password
         - email
         - studyLevel
@@ -406,3 +472,106 @@ components:
           type: string
           format: date
           example: 2024-09-01
+    AuthRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    TokenDTO:
+      type: object
+      properties:
+        value:
+          type: string
+    StudentRegistrationRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          $ref: '#/components/schemas/GenderDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+    GenderDTO:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+    RegistrationDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: created user ID
+        accessToken:
+          $ref: '#/components/schemas/TokenDTO'
+    StudentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identifier of user
+        email:
+          type: string
+        firstname:
+          type: string
+          description: user firstname
+        lastname:
+          type: string
+          description: user lastname
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          $ref: '#/components/schemas/GenderDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+        profileImageId:
+          type: string
+          format: uuid
+    UpdateUserDTO:
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: user firstname
+        lastname:
+          type: string
+          description: user lastname
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          $ref: '#/components/schemas/GenderDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+        profileImageId:
+          type: string
+          format: uuid
+    PhoneNumberDTO:
+      type: object
+      properties:
+        number:
+          type: string
+          example: 677889900
+        countryCode:
+          type: string
+          example: 237
+    StudentIdResponseDTO:
+      type: object
+      properties:
+        value:
+          type: string
+          format: uuid

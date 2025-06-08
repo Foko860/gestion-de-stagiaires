@@ -1,0 +1,33 @@
+### Test d'inscription d'un étudiant
+POST http://localhost:8185/api/internship-management/v1/auth/register/student
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "SecurePassword123!",
+  "firstname": "John",
+  "lastname": "Doe",
+  "dateOfBirth": "2000-05-15",
+  "gender": "MALE",
+  "phoneNumber": {
+    "countryCode": "+237",
+    "number": "123456789"
+  }
+}
+
+
+### Test de connexion utilisateur valide
+POST http://localhost:8185/api/internship-management/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "SecurePassword123!"
+}
+
+### Test avec token manuel (remplacer par un vrai token)
+GET http://localhost:8185/api/internship-management/v1/auth/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1RVREVOVCIsInN1YiI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ5NzE1MDg4LCJleHAiOjE3NDk3NjU2MDB9.1tMomgM_tZn2bA1QibfgyosLwaI0vPYG36i_r4c8Qew
+Content-Type: application/json
+
+

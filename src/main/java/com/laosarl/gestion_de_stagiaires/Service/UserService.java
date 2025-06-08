@@ -2,9 +2,6 @@ package com.laosarl.gestion_de_stagiaires.Service;
 
 import com.laosarl.gestion_de_stagiaires.Model.User;
 import com.laosarl.gestion_de_stagiaires.Repository.UserRepository;
-import com.laosarl.gestion_de_stagiaires.Service.mapper.UserMapper;
-import com.laosarl.internship_management.model.UserRequestDTO;
-import com.laosarl.internship_management.model.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,10 +38,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id).map(UserMapper::removePassword);
-    }
+//    @Transactional(readOnly = true)
+//    public Optional<User> getUserById(Long id) {
+//        return userRepository.findById(id).map(UserMapper::removePassword);
+//    }
 
     @Transactional
     public User updateUser(Long id, User userDetails) {
@@ -53,7 +50,7 @@ public class UserService {
 
 
         verification(userDetails, user);
-        UserMapper.update(userDetails, user);
+//        UserMapper.update(userDetails, user);
 
 
         return userRepository.save(user);

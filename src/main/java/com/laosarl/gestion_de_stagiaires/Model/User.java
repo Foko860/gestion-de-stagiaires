@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "app_users")
+@Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter

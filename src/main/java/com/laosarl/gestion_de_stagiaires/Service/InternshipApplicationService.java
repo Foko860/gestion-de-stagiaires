@@ -1,15 +1,16 @@
 package com.laosarl.gestion_de_stagiaires.Service;
 
 import com.laosarl.gestion_de_stagiaires.Model.InternshipApplication;
-import com.laosarl.gestion_de_stagiaires.Model.Student;
 import com.laosarl.gestion_de_stagiaires.Repository.StudentRepository;
 import com.laosarl.gestion_de_stagiaires.Repository.InternshipApplicationRepository;
+import com.laosarl.gestion_de_stagiaires.domain.student.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class InternshipApplicationService {
     private final StudentRepository studentRepository;
 
     public InternshipApplication create(InternshipApplication application) {
-        Long studentId = application.getStudent().getId();
+        UUID studentId = application.getStudent().getId();
 
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));

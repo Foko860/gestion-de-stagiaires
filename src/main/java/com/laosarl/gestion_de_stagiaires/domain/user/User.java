@@ -1,7 +1,7 @@
-package com.laosarl.gestion_de_stagiaires.security.domain.user;
+package com.laosarl.gestion_de_stagiaires.domain.user;
 
 import com.laosarl.gestion_de_stagiaires.security.common.EntityBase;
-import com.laosarl.gestion_de_stagiaires.security.domain.token.Token;
+import com.laosarl.gestion_de_stagiaires.domain.token.Token;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -28,30 +28,31 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class UserNew extends EntityBase implements UserDetails {
-    @Column(name = "c_email")
+public abstract class User extends EntityBase implements UserDetails {
+
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "c_password")
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "c_firstname")
+    @Column(name = "firstname")
     private String firstname;
 
-    @Column(name = "c_lastname")
+    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "c_date_of_bird")
+    @Column(name = "date_of_bird")
     private LocalDate dateOfBirth;
 
     @Embedded
     private PhoneNumber phoneNumber;
 
-    @Column(name = "c_gender")
+    @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "c_role")
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -1,8 +1,8 @@
 package com.laosarl.gestion_de_stagiaires.security.mapper;
 
-import com.laosarl.gestion_de_stagiaires.security.domain.student.StudentNew;
-import com.laosarl.gestion_de_stagiaires.security.domain.user.PhoneNumber;
-import com.laosarl.gestion_de_stagiaires.security.domain.user.UserNew;
+import com.laosarl.gestion_de_stagiaires.domain.student.Student;
+import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
+import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import com.laosarl.internship_management.model.PhoneNumberDTO;
 import com.laosarl.internship_management.model.StudentDTO;
 import com.laosarl.internship_management.model.StudentRegistrationRequestDTO;
@@ -21,15 +21,16 @@ import org.springframework.stereotype.Component;
 )
 @Component
 public interface StudentMapper {
+
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "email", source = "email")
-    @Mapping(target = "password", source = "password")
-    @Mapping(target = "firstname", source = "firstname")
-    @Mapping(target = "lastname", source = "lastname")
+    @Mapping(target = "password")
+    @Mapping(target = "firstname")
+    @Mapping(target = "lastname")
     @Mapping(target = "gender", source = "gender.value")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
-    @Mapping(target = "phoneNumber", source = "phoneNumber")
-    StudentNew toStudent(StudentRegistrationRequestDTO studentRegistrationRequestDTO);
+    @Mapping(target = "dateOfBirth")
+    @Mapping(target = "phoneNumber")
+    Student toStudent(StudentRegistrationRequestDTO studentRegistrationRequestDTO);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id")
@@ -40,7 +41,7 @@ public interface StudentMapper {
     @Mapping(target = "phoneNumber")
     @Mapping(target = "gender")
     @Mapping(target = "profileImageId", source = "profileImage.value")
-    StudentDTO toDTO(StudentNew studentNew);
+    StudentDTO toDTO(Student studentNew);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "firstname", source = "firstname")
@@ -49,7 +50,7 @@ public interface StudentMapper {
     @Mapping(target = "gender", source = "gender")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "fromPhoneNumberDTOToPhoneNumber")
     @Mapping(target = "profileImage.value", source = "profileImageId")
-    void copyDataFromUpdateUserDTOToUser(UpdateUserDTO updateUserDTO, @MappingTarget UserNew user);
+    void copyDataFromUpdateUserDTOToUser(UpdateUserDTO updateUserDTO, @MappingTarget User user);
 
     @Named("fromPhoneNumberDTOToPhoneNumber")
     @Mapping(target = "countryCode", source = "countryCode")

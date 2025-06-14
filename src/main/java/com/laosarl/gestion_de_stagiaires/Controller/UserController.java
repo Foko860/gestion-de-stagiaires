@@ -1,16 +1,8 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
-import com.laosarl.gestion_de_stagiaires.Model.User;
-import com.laosarl.gestion_de_stagiaires.Service.UserService;
 import com.laosarl.internship_management.api.UserApi;
-import com.laosarl.internship_management.model.UserRequestDTO;
-import com.laosarl.internship_management.model.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

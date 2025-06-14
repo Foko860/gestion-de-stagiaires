@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.security.configuration;
+package com.laosarl.gestion_de_stagiaires.configuration;
 
 import com.laosarl.gestion_de_stagiaires.security.repository.StudentSpringRepository;
 import lombok.RequiredArgsConstructor;

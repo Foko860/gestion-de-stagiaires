@@ -1,11 +1,12 @@
 package com.laosarl.gestion_de_stagiaires.security.service;
 
-import com.laosarl.gestion_de_stagiaires.security.domain.student.StudentNew;
-import com.laosarl.gestion_de_stagiaires.security.domain.token.Token;
-import com.laosarl.gestion_de_stagiaires.security.domain.token.TokenType;
-import com.laosarl.gestion_de_stagiaires.security.domain.user.CurrentUserNotFound;
-import com.laosarl.gestion_de_stagiaires.security.domain.user.Role;
-import com.laosarl.gestion_de_stagiaires.security.domain.user.UserNew;
+import com.laosarl.gestion_de_stagiaires.Service.JwtService;
+import com.laosarl.gestion_de_stagiaires.domain.student.Student;
+import com.laosarl.gestion_de_stagiaires.domain.token.Token;
+import com.laosarl.gestion_de_stagiaires.domain.token.TokenType;
+import com.laosarl.gestion_de_stagiaires.domain.user.CurrentUserNotFound;
+import com.laosarl.gestion_de_stagiaires.domain.user.Role;
+import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import com.laosarl.gestion_de_stagiaires.security.mapper.StudentMapper;
 import com.laosarl.gestion_de_stagiaires.security.repository.StudentSpringRepository;
 import com.laosarl.gestion_de_stagiaires.security.repository.TokenSpringRepository;
@@ -39,14 +40,14 @@ public class StudentServiceNew {
     private final StudentSpringRepository studentSpringRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private void revokeAllUserTokens(UserNew user) {
+    private void revokeAllUserTokens(User user) {
         List<Token> allValidTokensByUser = tokenSpringRepository.findAllValidTokensByUserId(user.getId());
         if (!allValidTokensByUser.isEmpty()) {
             tokenSpringRepository.deleteAll(allValidTokensByUser);
         }
     }
 
-    private void saveUserToken(UserNew savedUser, String jwtToken) {
+    private void saveUserToken(User savedUser, String jwtToken) {
         Token token = Token.builder()
                 .value(jwtToken)
                 .user(savedUser)
@@ -66,7 +67,7 @@ public class StudentServiceNew {
                 )
         );
 
-        UserNew user = studentSpringRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow();
+        User user = studentSpringRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow();
         String jwtToken = jwtService.generateToken(Map.of("role", user.getRole()), user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
@@ -76,13 +77,13 @@ public class StudentServiceNew {
 
     @Transactional
     public StudentIdResponseDTO createStudent(StudentRegistrationRequestDTO studentRegistrationRequestDTO) {
-        StudentNew student = studentMapper.toStudent(studentRegistrationRequestDTO);
+        Student student = studentMapper.toStudent(studentRegistrationRequestDTO);
         student.setPassword(passwordEncoder.encode(student.getPassword()));
         student.setRole(Role.STUDENT);
         if (studentSpringRepository.existsByEmail(student.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
-        StudentNew saved = studentSpringRepository.save(student);
+        Student saved = studentSpringRepository.save(student);
 
         log.info("Event: new student created with ID: \n {}", saved.getId());
         return new StudentIdResponseDTO().value(saved.getId());
@@ -91,11 +92,11 @@ public class StudentServiceNew {
     @SneakyThrows
     @Transactional
     public StudentDTO getUserByUsername(String username) {
-        StudentNew studentNew = getUserByEmail(username);
+        Student studentNew = getUserByEmail(username);
         return studentMapper.toDTO(studentNew);
     }
 
-    private StudentNew getUserByEmail(String username) throws CurrentUserNotFound {
+    private Student getUserByEmail(String username) throws CurrentUserNotFound {
         return studentSpringRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new CurrentUserNotFound(ErrorCode.CURRENT_USER_NOT_FOUND));
@@ -104,7 +105,7 @@ public class StudentServiceNew {
     @SneakyThrows
     @Transactional
     public void updateUser(String username, UpdateUserDTO updateUserDTO) {
-        StudentNew user = getUserByEmail(username);
+        Student user = getUserByEmail(username);
         studentMapper.copyDataFromUpdateUserDTOToUser(updateUserDTO, user);
         studentSpringRepository.save(user);
     }

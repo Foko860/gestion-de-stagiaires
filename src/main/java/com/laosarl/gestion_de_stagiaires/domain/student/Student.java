@@ -1,6 +1,6 @@
-package com.laosarl.gestion_de_stagiaires.security.domain.student;
+package com.laosarl.gestion_de_stagiaires.domain.student;
 
-import com.laosarl.gestion_de_stagiaires.security.domain.user.UserNew;
+import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,8 +14,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_student")
-public class StudentNew extends UserNew {
+@Table(name = "students")
+public class Student extends User {
 
     @Column(name = "study_level")
     private String studyLevel;

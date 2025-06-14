@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class StudentResource implements AuthApi {
+public abstract class StudentRess implements AuthApi {
     private final StudentServiceNew studentServiceNew;
 
     private static String getCurrentUsername() {
@@ -29,7 +29,7 @@ public class StudentResource implements AuthApi {
         return ResponseEntity.ok(studentServiceNew.loginUser(authRequestDTO));
     }
 
-    @Override
+//    @Override
     public ResponseEntity<StudentIdResponseDTO> createStudentAuth(StudentRegistrationRequestDTO studentRegistrationRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)

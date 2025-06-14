@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.security.domain.user;
+package com.laosarl.gestion_de_stagiaires.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -16,7 +16,4 @@ public class ProfileImage {
     @Column(name = "c_profile_image")
     private UUID value;
 
-    public ProfileImage(UUID imageIdValue) {
-        this.value = imageIdValue;
-    }
 }

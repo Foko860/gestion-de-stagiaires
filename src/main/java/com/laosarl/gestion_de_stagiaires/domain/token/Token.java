@@ -1,7 +1,7 @@
-package com.laosarl.gestion_de_stagiaires.security.domain.token;
+package com.laosarl.gestion_de_stagiaires.domain.token;
 
+import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import com.laosarl.gestion_de_stagiaires.security.common.EntityBase;
-import com.laosarl.gestion_de_stagiaires.security.domain.user.UserNew;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,22 +19,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "t_token")
+@Table(name = "token")
 public class Token extends EntityBase {
-    @Column(name = "c_token")
+    @Column(name = "token")
     private String value;
 
-    @Column(name = "c_type")
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private TokenType type;
 
-    @Column(name = "c_expired")
+    @Column(name = "expired")
     private boolean expired;
 
-    @Column(name = "c_revoked")
+    @Column(name = "revoked")
     private boolean revoked;
 
     @ManyToOne
-    @JoinColumn(name = "c_user_id", referencedColumnName = "c_id")
-    private UserNew user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

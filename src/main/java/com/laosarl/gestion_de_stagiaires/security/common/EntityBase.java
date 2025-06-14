@@ -27,20 +27,21 @@ import java.util.UUID;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class EntityBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "c_id")
+    @Column(name = "id")
     protected UUID id;
 
     @Version
-    @Column(name = "c_version")
+    @Column(name = "version")
     private int version;
 
-    @Column(name = "c_creation_date")
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @LastModifiedDate
-    @Column(name = "c_last_modified_date")
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @PrePersist

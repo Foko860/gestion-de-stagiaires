@@ -1,7 +1,7 @@
-package com.laosarl.gestion_de_stagiaires.security.configuration.filter;
+package com.laosarl.gestion_de_stagiaires.configuration.filter;
 
 import com.laosarl.gestion_de_stagiaires.security.repository.TokenSpringRepository;
-import com.laosarl.gestion_de_stagiaires.security.service.JwtService;
+import com.laosarl.gestion_de_stagiaires.Service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.security.service;
+package com.laosarl.gestion_de_stagiaires.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -38,8 +38,10 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
+        // Genere la date d'expiration du token
         LocalDate localDate = LocalDate.now().plusDays(1L);
         Date expirationDate = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

@@ -29,15 +29,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenDTO'
-  /auth/register/student:
+  /register/student:
     post:
       tags:
-        - Auth
-      summary: Create a new user
-      description: Create a new user
-      operationId: createStudentAuth
+        - Student
+      summary: Create a new student
+      description: Create a new student
+      operationId: createStudent
       requestBody:
-        description: data that need to be use for create User
+        description: data needed to create a student
         required: true
         content:
           application/json:
@@ -50,13 +50,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentIdResponseDTO'
-  /auth/user:
+  /students:
     get:
       tags:
-        - Auth
-      summary: get current User
-      description: get current User
-      operationId: getCurrentStudentAuth
+        - Student
+      summary: get student User
+      description: get student User
+      operationId: getCurrentStudent
       responses:
         200:
           description: successful operation
@@ -67,16 +67,16 @@ paths:
     put:
       tags:
         - Auth
-      summary: update an user
-      description: update an user
-      operationId: updateUserAuth
+      summary: update a student
+      description: update an student
+      operationId: updateStudent
       requestBody:
-        description: Data that will be used to modify the user
+        description: Data that will be used to modify the student
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUserDTO'
+              $ref: '#/components/schemas/UpdateStudentDTO'
       responses:
         204:
           description: successful operation
@@ -139,35 +139,6 @@ paths:
                 $ref: '#/components/schemas/UserResponseDTO'
         '404':
           description: User not found
-
-    put:
-      tags:
-        - User
-      summary: Update a user
-      operationId: updateUser
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserRequestDTO'
-      responses:
-        '200':
-          description: User updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserResponseDTO'
-        '404':
-          description: User not found
-
     delete:
       tags:
         - User
@@ -210,28 +181,6 @@ paths:
           description: Invalid credentials
         '400':
           description: Bad request
-
-  /students:
-    post:
-      tags:
-        - Student
-      summary: Create a new student
-      operationId: createStudent
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateStudentRequestDTO'
-      responses:
-        '201':
-          description: Student successfully created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StudentIdResponseDTO'
-        '400':
-          description: Invalid request
     get:
       tags:
         - Student
@@ -268,33 +217,6 @@ paths:
                 $ref: '#/components/schemas/StudentResponseDTO'
         '404':
           description: Student not found
-    put:
-      tags:
-        - Student
-      summary: Update a student
-      operationId: updateStudent
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateStudentRequestDTO'
-      responses:
-        '200':
-          description: Student updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StudentResponseDTO'
-        '404':
-          description: Student not found
     delete:
       tags:
         - Student
@@ -305,8 +227,8 @@ paths:
           in: path
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            format: uuid
       responses:
         '204':
           description: Student successfully deleted
@@ -486,6 +408,10 @@ components:
           type: string
     StudentRegistrationRequestDTO:
       type: object
+      required:
+        - password
+        - email
+        - phoneNumber
       properties:
         email:
           type: string
@@ -527,10 +453,10 @@ components:
           type: string
         firstname:
           type: string
-          description: user firstname
+          description: student firstname
         lastname:
           type: string
-          description: user lastname
+          description: student lastname
         dateOfBirth:
           type: string
           format: date
@@ -538,18 +464,15 @@ components:
           $ref: '#/components/schemas/GenderDTO'
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumberDTO'
-        profileImageId:
-          type: string
-          format: uuid
-    UpdateUserDTO:
+    UpdateStudentDTO:
       type: object
       properties:
         firstname:
           type: string
-          description: user firstname
+          description: student firstname
         lastname:
           type: string
-          description: user lastname
+          description: student lastname
         dateOfBirth:
           type: string
           format: date
@@ -557,9 +480,6 @@ components:
           $ref: '#/components/schemas/GenderDTO'
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumberDTO'
-        profileImageId:
-          type: string
-          format: uuid
     PhoneNumberDTO:
       type: object
       properties:

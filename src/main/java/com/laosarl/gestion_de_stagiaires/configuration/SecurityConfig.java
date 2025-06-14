@@ -1,6 +1,6 @@
-package com.laosarl.gestion_de_stagiaires.security.configuration;
+package com.laosarl.gestion_de_stagiaires.configuration;
 
-import com.laosarl.gestion_de_stagiaires.security.configuration.filter.JwtAuthenticationFilter;
+import com.laosarl.gestion_de_stagiaires.configuration.filter.JwtAuthenticationFilter;
 import com.laosarl.gestion_de_stagiaires.security.service.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,14 +47,14 @@ public class SecurityConfig {
                         requestMatcherConfigurer ->
                                 requestMatcherConfigurer
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
-                                        .requestMatchers(HttpMethod.POST, "/auth/register/student")
+                                        .requestMatchers(HttpMethod.POST, "/register/student")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/auth/register/student").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/register/student").permitAll()
                 )
                 .build();
     }

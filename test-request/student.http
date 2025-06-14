@@ -1,5 +1,5 @@
 ### Test d'inscription d'un étudiant
-POST http://localhost:8185/api/internship-management/v1/auth/register/student
+POST http://localhost:8185/api/internship-management/v1/register/student
 Content-Type: application/json
 
 {

@@ -1,6 +1,7 @@
 package com.laosarl.gestion_de_stagiaires.Model;
 
 import com.laosarl.gestion_de_stagiaires.Enum.InternshipApplicationStatus;
+import com.laosarl.gestion_de_stagiaires.domain.student.Student;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

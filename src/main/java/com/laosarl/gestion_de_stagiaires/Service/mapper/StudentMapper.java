@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.security.mapper;
+package com.laosarl.gestion_de_stagiaires.Service.mapper;
 
 import com.laosarl.gestion_de_stagiaires.domain.student.Student;
 import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
@@ -6,7 +6,7 @@ import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import com.laosarl.internship_management.model.PhoneNumberDTO;
 import com.laosarl.internship_management.model.StudentDTO;
 import com.laosarl.internship_management.model.StudentRegistrationRequestDTO;
-import com.laosarl.internship_management.model.UpdateUserDTO;
+import com.laosarl.internship_management.model.UpdateStudentDTO;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -33,15 +33,16 @@ public interface StudentMapper {
     Student toStudent(StudentRegistrationRequestDTO studentRegistrationRequestDTO);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id")
-    @Mapping(target = "email")
-    @Mapping(target = "firstname")
-    @Mapping(target = "lastname")
-    @Mapping(target = "dateOfBirth")
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "firstName", source = "firstname")
+    @Mapping(target = "lastName", source = "lastname")
+    @Mapping(target = "speciality")
+    @Mapping(target = "studyLevel")
+    @Mapping(target = "university")
     @Mapping(target = "phoneNumber")
     @Mapping(target = "gender")
-    @Mapping(target = "profileImageId", source = "profileImage.value")
-    StudentDTO toDTO(Student studentNew);
+    StudentDTO toDTO(Student student);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "firstname", source = "firstname")
@@ -49,8 +50,7 @@ public interface StudentMapper {
     @Mapping(target = "dateOfBirth", source = "dateOfBirth")
     @Mapping(target = "gender", source = "gender")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "fromPhoneNumberDTOToPhoneNumber")
-    @Mapping(target = "profileImage.value", source = "profileImageId")
-    void copyDataFromUpdateUserDTOToUser(UpdateUserDTO updateUserDTO, @MappingTarget User user);
+    void copyDataFromUpdateUserDTOToUser(UpdateStudentDTO updateStudentDTO, @MappingTarget User user);
 
     @Named("fromPhoneNumberDTOToPhoneNumber")
     @Mapping(target = "countryCode", source = "countryCode")

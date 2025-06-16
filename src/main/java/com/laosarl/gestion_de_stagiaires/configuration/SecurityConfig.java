@@ -1,7 +1,7 @@
 package com.laosarl.gestion_de_stagiaires.configuration;
 
 import com.laosarl.gestion_de_stagiaires.configuration.filter.JwtAuthenticationFilter;
-import com.laosarl.gestion_de_stagiaires.security.service.LogoutService;
+import com.laosarl.gestion_de_stagiaires.Service.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

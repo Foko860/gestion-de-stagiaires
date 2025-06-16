@@ -1,6 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.configuration;
 
-import com.laosarl.gestion_de_stagiaires.security.repository.StudentSpringRepository;
+import com.laosarl.gestion_de_stagiaires.Repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityBean {
-    private final StudentSpringRepository studentSpringRepository;
+    private final StudentRepository studentRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> studentSpringRepository.findByEmail(username)
+        return username -> studentRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 

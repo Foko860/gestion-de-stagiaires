@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.security.common;
+package com.laosarl.gestion_de_stagiaires.domain.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

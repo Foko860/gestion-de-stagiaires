@@ -1,7 +1,7 @@
 package com.laosarl.gestion_de_stagiaires.domain.token;
 
 import com.laosarl.gestion_de_stagiaires.domain.user.User;
-import com.laosarl.gestion_de_stagiaires.security.common.EntityBase;
+import com.laosarl.gestion_de_stagiaires.domain.common.EntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

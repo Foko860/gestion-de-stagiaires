@@ -1,6 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.Service;
 
-import com.laosarl.gestion_de_stagiaires.Model.InternshipApplication;
+import com.laosarl.gestion_de_stagiaires.domain.InternshipApplication;
 import com.laosarl.gestion_de_stagiaires.Repository.StudentRepository;
 import com.laosarl.gestion_de_stagiaires.Repository.InternshipApplicationRepository;
 import com.laosarl.gestion_de_stagiaires.domain.student.Student;

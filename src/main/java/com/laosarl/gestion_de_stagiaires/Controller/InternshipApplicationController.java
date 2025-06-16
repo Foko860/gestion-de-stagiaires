@@ -1,6 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
-import com.laosarl.gestion_de_stagiaires.Model.InternshipApplication;
+import com.laosarl.gestion_de_stagiaires.domain.InternshipApplication;
 import com.laosarl.gestion_de_stagiaires.Service.InternshipApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

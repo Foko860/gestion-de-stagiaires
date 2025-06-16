@@ -1,6 +1,6 @@
-package com.laosarl.gestion_de_stagiaires.security.service;
+package com.laosarl.gestion_de_stagiaires.Service;
 
-import com.laosarl.gestion_de_stagiaires.security.repository.TokenSpringRepository;
+import com.laosarl.gestion_de_stagiaires.Repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -15,7 +15,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
-    private final TokenSpringRepository tokenSpringRepository;
+    private final TokenRepository tokenSpringRepository;
 
     @Override
     @Transactional

@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.Enum;
+package com.laosarl.gestion_de_stagiaires.domain;
 
 public enum InternshipApplicationStatus {
 

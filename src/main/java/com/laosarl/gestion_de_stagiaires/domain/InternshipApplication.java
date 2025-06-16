@@ -1,6 +1,5 @@
-package com.laosarl.gestion_de_stagiaires.Model;
+package com.laosarl.gestion_de_stagiaires.domain;
 
-import com.laosarl.gestion_de_stagiaires.Enum.InternshipApplicationStatus;
 import com.laosarl.gestion_de_stagiaires.domain.student.Student;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

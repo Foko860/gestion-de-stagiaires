@@ -2,6 +2,7 @@ package com.laosarl.gestion_de_stagiaires.Model;
 
 import com.laosarl.gestion_de_stagiaires.Enum.InternshipApplicationStatus;
 import com.laosarl.gestion_de_stagiaires.domain.student.Student;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "internship_applications")
@@ -31,19 +33,34 @@ public class InternshipApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
+    @Column(name = "first_name")
+    private String  firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "study_level")
+    private String studyLevel;
+
+    @Column(name = "speciality")
+    private String speciality;
+
+    @Column(name = "university")
+    private String university;
+
+    @Column(name = "curriculum_vitae")
     private String cv;
 
-    private String coverLetter;
+    @Column(name= "start_date")
+    private LocalDate startDate;
+
+    @Column(name= "end_date")
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     private InternshipApplicationStatus status;
 
     private LocalDate submissionDate;
 
-    @ManyToOne(fetch = FetchType.EAGER
-    )
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
 }

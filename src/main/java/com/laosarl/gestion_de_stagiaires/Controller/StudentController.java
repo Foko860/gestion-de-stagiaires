@@ -14,7 +14,6 @@ import com.laosarl.internship_management.model.StudentIdResponseDTO;
 import com.laosarl.internship_management.model.StudentRegistrationRequestDTO;
 import com.laosarl.internship_management.model.StudentResponseDTO;
 import com.laosarl.internship_management.model.TokenDTO;
-import com.laosarl.internship_management.model.
 import com.laosarl.internship_management.model.UpdateStudentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

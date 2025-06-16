@@ -4,17 +4,22 @@ import com.laosarl.gestion_de_stagiaires.Repository.StudentRepository;
 import com.laosarl.gestion_de_stagiaires.domain.student.Student;
 import com.laosarl.gestion_de_stagiaires.domain.token.Token;
 import com.laosarl.gestion_de_stagiaires.domain.token.TokenType;
+import com.laosarl.gestion_de_stagiaires.domain.user.CurrentUserNotFound;
 import com.laosarl.gestion_de_stagiaires.domain.user.Role;
 import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import com.laosarl.gestion_de_stagiaires.exceptions.EmailAlreadyUsedException;
 import com.laosarl.gestion_de_stagiaires.exceptions.StudentNotFoundException;
 import com.laosarl.gestion_de_stagiaires.security.mapper.StudentMapper;
+import com.laosarl.gestion_de_stagiaires.security.repository.StudentSpringRepository;
 import com.laosarl.gestion_de_stagiaires.security.repository.TokenSpringRepository;
+import com.laosarl.gestion_de_stagiaires.security.utils.ErrorCode;
 import com.laosarl.internship_management.model.AuthRequestDTO;
+import com.laosarl.internship_management.model.StudentDTO;
 import com.laosarl.internship_management.model.StudentIdResponseDTO;
 import com.laosarl.internship_management.model.StudentRegistrationRequestDTO;
 import com.laosarl.internship_management.model.TokenDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -38,6 +44,7 @@ public class StudentService {
     private final JwtService jwtService;
     private final TokenSpringRepository tokenSpringRepository;
     private final StudentMapper studentMapper;
+    private final StudentSpringRepository studentSpringRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -93,6 +100,42 @@ public class StudentService {
         return new StudentIdResponseDTO().value(saved.getId());
     }
 
+    @SneakyThrows
+    @jakarta.transaction.Transactional
+    public StudentDTO getUserByUsername(String username) {
+        Student studentNew = getUserByEmail(username);
+        return studentMapper.toDTO(studentNew);
+    }
+
+    private Student getUserByEmail(String username) throws CurrentUserNotFound {
+        return studentSpringRepository
+                .findByEmail(username)
+                .orElseThrow(() -> new CurrentUserNotFound(ErrorCode.CURRENT_USER_NOT_FOUND));
+    }
+
+    @SneakyThrows
+    @jakarta.transaction.Transactional
+    public void updateUser(String username, UpdateUserDTO updateUserDTO) {
+        Student user = getUserByEmail(username);
+        studentMapper.copyDataFromUpdateUserDTOToUser(updateUserDTO, user);
+        studentSpringRepository.save(user);
+    }
+
+
+    public void deleteStudent(UUID id) {
+        studentRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
+
+    @Transactional(readOnly = true)
+    public Optional<Student> getStudentById(UUID id) { // Changement pour retourner Optional
+        return studentRepository.findById(id);
+   }
 //    private final UserMapper userMapper;
 
 //    public Student createStudent(CreateStudentRequestDTO createStudentRequestDTO) {
@@ -117,7 +160,5 @@ public class StudentService {
 //        return studentRepository.save(existing);
 //    }
 //
-    public void deleteStudent(UUID id) {
-        studentRepository.deleteById(id);
-    }
+
 }

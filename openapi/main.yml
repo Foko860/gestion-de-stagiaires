@@ -119,6 +119,80 @@ paths:
           description: Student successfully deleted
         '404':
           description: Student not found
+  /internship-applications:
+    post:
+      tags:
+        - InternshipApplication
+      summary: Create a new internship application
+      operationId: createInternshipApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternshipApplicationRequestDTO'
+      responses:
+        '201':
+          description: Internship application created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+
+    get:
+      tags:
+        - InternshipApplication
+      summary: Get all internship applications
+      operationId: getAllInternshipApplications
+      responses:
+        '200':
+          description: List of internship applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+
+  /internship-applications/{id}:
+    get:
+      tags:
+        - InternshipApplication
+      summary: Get internship application by ID
+      operationId: getInternshipApplicationById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Internship application found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+        '404':
+          description: Internship application not found
+
+    delete:
+      tags:
+        - InternshipApplication
+      summary: Delete internship application by ID
+      operationId: deleteInternshipApplication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Internship application deleted
+
 
 components:
   schemas:
@@ -309,3 +383,69 @@ components:
         value:
           type: string
           format: uuid
+
+    InternshipApplicationRequestDTO:
+      type: object
+      required:
+          - firstName
+          - lastName
+          - studyLevel
+          - speciality
+          - university
+          - cv
+          - startDate
+          - endDate
+          - phoneNumber
+      properties:
+          firstName:
+            type: string
+          lastName:
+            type: string
+          studyLevel:
+            type: string
+          speciality:
+            type: string
+          university:
+            type: string
+          cv:
+            type: string
+            description: Path or identifier of the CV file
+          startDate:
+            type: string
+            format: date
+          endDate:
+            type: string
+            format: date
+          phoneNumber:
+              $ref: '#/components/schemas/PhoneNumberDTO'
+
+    InternshipApplicationResponseDTO:
+      type: object
+      properties:
+          id:
+            type: string
+            format: uuid
+          firstName:
+            type: string
+          lastName:
+            type: string
+          studyLevel:
+            type: string
+          speciality:
+            type: string
+          university:
+            type: string
+          cv:
+            type: string
+          startDate:
+            type: string
+            format: date
+          endDate:
+            type: string
+            format: date
+          status:
+            type: string
+            enum: [ DRAFT, PUBLISHED,PENDING, ACCEPTED, REJECTED ]
+          submissionDate:
+            type: string
+            format: date

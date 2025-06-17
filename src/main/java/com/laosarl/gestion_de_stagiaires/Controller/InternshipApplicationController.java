@@ -1,7 +1,10 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
 import com.laosarl.gestion_de_stagiaires.domain.InternshipApplication;
-import com.laosarl.gestion_de_stagiaires.Service.InternshipApplicationService;
+//import com.laosarl.gestion_de_stagiaires.Service.InternshipApplicationService;
+import com.laosarl.internship_management.api.InternshipApplicationApi;
+import com.laosarl.internship_management.model.InternshipApplicationRequestDTO;
+import com.laosarl.internship_management.model.InternshipApplicationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -15,41 +18,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/applications")
-public class InternshipApplicationController {
 
-    private final InternshipApplicationService internshipApplicationService;
+public abstract class InternshipApplicationController implements InternshipApplicationApi {
+    //private final InternshipApplicationService internshipApplicationService;
 
-    @PostMapping
-    public ResponseEntity<InternshipApplication> create(@RequestBody InternshipApplication application) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(internshipApplicationService.create(application));
+  /*  @Override
+    public ResponseEntity<InternshipApplicationResponseDTO> createInternshipApplication(InternshipApplicationRequestDTO internshipApplicationRequestDTO) {
+        return ResponseEntity.status(201).body(internshipApplicationService.create(request));
+    }*/
+
+    @Override
+    public ResponseEntity<Void> deleteInternshipApplication(UUID id) {
+        return null;
     }
 
-    @GetMapping
-    public ResponseEntity<List<InternshipApplication>> getAll() {
-        return ResponseEntity.ok(internshipApplicationService.getAll());
+    @Override
+    public ResponseEntity<List<InternshipApplicationResponseDTO>> getAllInternshipApplications() {
+        return null;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<InternshipApplication> getById(@PathVariable Long id) {
-        return internshipApplicationService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @Override
+    public ResponseEntity<InternshipApplicationResponseDTO> getInternshipApplicationById(UUID id) {
+        return null;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<InternshipApplication> update(@PathVariable Long id, @RequestBody InternshipApplication application) {
-        return ResponseEntity.ok(internshipApplicationService.update(id, application));
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        internshipApplicationService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 }

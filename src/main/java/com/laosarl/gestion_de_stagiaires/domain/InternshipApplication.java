@@ -1,7 +1,9 @@
 package com.laosarl.gestion_de_stagiaires.domain;
 
 import com.laosarl.gestion_de_stagiaires.domain.student.Student;
+import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -56,6 +58,9 @@ public class InternshipApplication {
 
     @Column(name= "end_date")
     private LocalDate endDate;
+
+    @Embedded
+    private PhoneNumber phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private InternshipApplicationStatus status;

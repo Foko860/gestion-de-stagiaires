@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.Service;
+/*package com.laosarl.gestion_de_stagiaires.Service;
 
 import com.laosarl.gestion_de_stagiaires.domain.InternshipApplication;
 import com.laosarl.gestion_de_stagiaires.Repository.StudentRepository;
@@ -54,4 +54,4 @@ public class InternshipApplicationService {
     public void delete(Long id) {
         internshipApplicationRepository.deleteById(id);
     }
-}
+}*/

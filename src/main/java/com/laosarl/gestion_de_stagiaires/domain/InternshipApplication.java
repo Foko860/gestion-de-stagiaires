@@ -33,7 +33,8 @@ import java.util.UUID;
 public class InternshipApplication {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @Column(name = "first_name")

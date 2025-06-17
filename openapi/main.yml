@@ -119,7 +119,7 @@ paths:
           description: Student successfully deleted
         '404':
           description: Student not found
-  /internship-applications:
+  /internship:
     post:
       tags:
         - InternshipApplication
@@ -154,7 +154,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/InternshipApplicationResponseDTO'
 
-  /internship-applications/{id}:
+
+
+  /internship/{id}:
     get:
       tags:
         - InternshipApplication
@@ -176,6 +178,36 @@ paths:
                 $ref: '#/components/schemas/InternshipApplicationResponseDTO'
         '404':
           description: Internship application not found
+    patch:
+      tags:
+        - InternshipApplication
+      summary: Partially update an internship application
+      description: Update one or more fields of an internship application
+      operationId: patchInternshipApplication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Fields to update in the internship application
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInternshipApplicationDTO'
+      responses:
+        '200':
+          description: Updated internship application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+        '404':
+          description: Internship application not found
+
 
     delete:
       tags:
@@ -445,7 +477,29 @@ components:
             format: date
           status:
             type: string
-            enum: [ DRAFT, PUBLISHED,PENDING, ACCEPTED, REJECTED ]
+            enum: [ DRAFT, PUBLISHED,IN_PROGRESS, ACCEPTED, REJECTED ]
           submissionDate:
             type: string
             format: date
+    UpdateInternshipApplicationDTO:
+      type: object
+      description: Fields to update in an internship application
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        studyLevel:
+          type: string
+        speciality:
+          type: string
+        university:
+          type: string
+        cv:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date

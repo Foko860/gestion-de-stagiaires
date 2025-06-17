@@ -48,6 +48,8 @@ public class SecurityConfig {
                                 requestMatcherConfigurer
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
                                         .requestMatchers(HttpMethod.POST, "/register/student")
+                                        .requestMatchers(HttpMethod.POST,"/internship-applications")
+                                        .requestMatchers(HttpMethod.GET,"/internship-applications")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
@@ -55,6 +57,9 @@ public class SecurityConfig {
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/register/student").permitAll()
+                                        .requestMatchers(HttpMethod.POST,"/internship-applications").permitAll()
+                                        .requestMatchers(HttpMethod.GET,"/internship-applications").permitAll()
+                                        .requestMatchers(HttpMethod.DELETE,"/internship-applications").permitAll()
                 )
                 .build();
     }

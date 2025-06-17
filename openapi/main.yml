@@ -188,6 +188,7 @@ paths:
         - name: id
           in: path
           required: true
+          description: UUID of the internship application
           schema:
             type: string
             format: uuid

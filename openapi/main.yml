@@ -119,6 +119,9 @@ paths:
           description: Student successfully deleted
         '404':
           description: Student not found
+
+
+
   /internship:
     post:
       tags:
@@ -225,6 +228,62 @@ paths:
       responses:
         '204':
           description: Internship application deleted
+  /internship/{id}/accept:
+    post:
+      summary: Accepter une candidature
+      tags:
+        - InternshipApplication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID de la candidature à accepter
+      responses:
+        '200':
+          description: Candidature acceptée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+        '404':
+          description: Candidature non trouvée
+
+  /internship/{id}/reject:
+    post:
+      summary: Refuser une candidature
+      tags:
+        - InternshipApplication
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID de la candidature à refuser
+      requestBody:
+        description: Optionnel, raison du refus
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  example: "Le profil ne correspond pas aux critères."
+      responses:
+        '200':
+          description: Candidature refusée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+        '404':
+          description: Candidature non trouvée
 
 
 components:
@@ -455,33 +514,37 @@ components:
     InternshipApplicationResponseDTO:
       type: object
       properties:
-          id:
-            type: string
-            format: uuid
-          firstName:
-            type: string
-          lastName:
-            type: string
-          studyLevel:
-            type: string
-          speciality:
-            type: string
-          university:
-            type: string
-          cv:
-            type: string
-          startDate:
-            type: string
-            format: date
-          endDate:
-            type: string
-            format: date
-          status:
-            type: string
-            enum: [ DRAFT, PUBLISHED,IN_PROGRESS, ACCEPTED, REJECTED ]
-          submissionDate:
-            type: string
-            format: date
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        studyLevel:
+          type: string
+        speciality:
+          type: string
+        university:
+          type: string
+        cv:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ DRAFT, PUBLISHED, IN_PROGRESS, ACCEPTED, REJECTED ]
+        submissionDate:
+          type: string
+          format: date
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+
+
     UpdateInternshipApplicationDTO:
       type: object
       description: Fields to update in an internship application
@@ -504,3 +567,5 @@ components:
         endDate:
           type: string
           format: date
+        phoneNumber: # ✅ Ajoutez ceci aussi
+          $ref: '#/components/schemas/PhoneNumberDTO'

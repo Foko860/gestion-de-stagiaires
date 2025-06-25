@@ -22,8 +22,8 @@ public class InternshipApplicationService {
     private final InternshipApplicationMapper internshipApplicationMapper;
 
     @Transactional
-    public InternshipApplicationResponseDTO create(InternshipApplicationRequestDTO requestDTO) {
-        InternshipApplication entity = internshipApplicationMapper.toEntity(requestDTO);
+    public InternshipApplicationResponseDTO create(InternshipApplicationRequestDTO internshipApplicationRequestDTO) {
+        InternshipApplication entity = internshipApplicationMapper.toEntity(internshipApplicationRequestDTO);
         entity.setSubmissionDate(LocalDate.now());
         entity.setStatus(InternshipApplicationStatus.IN_PROGRESS);
         return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(entity));
@@ -48,11 +48,35 @@ public class InternshipApplicationService {
         internshipApplicationRepository.deleteById(id);
     }
 
+
     @Transactional
-    public InternshipApplicationResponseDTO patch(UUID id, UpdateInternshipApplicationDTO dto) {
-        InternshipApplication application = internshipApplicationRepository.findById(id)
+    public InternshipApplicationResponseDTO accept(UUID id) {
+        InternshipApplication internshipApplication = internshipApplicationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Application not found"));
-        internshipApplicationMapper.updateFromDTO(dto, application);
-        return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(application));
+
+        internshipApplication.setStatus(InternshipApplicationStatus.ACCEPTED);
+
+        return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(internshipApplication));
+    }
+
+    @Transactional
+    public InternshipApplicationResponseDTO reject(UUID id, String reason) {
+        InternshipApplication internshipApplication = internshipApplicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found"));
+
+        internshipApplication.setStatus(InternshipApplicationStatus.REJECTED);
+        // Optional: stocker la raison quelque part plus tard
+
+        return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(internshipApplication));
+    }
+
+
+
+    @Transactional
+    public InternshipApplicationResponseDTO patch(UUID id, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
+        InternshipApplication internshipApplication = internshipApplicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found"));
+        internshipApplicationMapper.updateFromDTO(updateInternshipApplicationDTO, internshipApplication);
+        return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(internshipApplication));
     }
 }

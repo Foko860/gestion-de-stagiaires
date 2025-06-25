@@ -39,6 +39,21 @@ public class InternshipApplicationController implements InternshipApplicationApi
     }
 
     @Override
+    public ResponseEntity<InternshipApplicationResponseDTO> internshipIdAcceptPost(UUID id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(internshipApplicationService.accept(id));
+    }
+
+    @Override
+    public ResponseEntity<InternshipApplicationResponseDTO> internshipIdRejectPost(UUID id, InternshipIdRejectPostRequest internshipIdRejectPostRequest) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(internshipApplicationService.reject(id, internshipIdRejectPostRequest != null ? internshipIdRejectPostRequest.getReason() : null));
+
+    }
+
+    @Override
     public ResponseEntity<Void> deleteInternshipApplication(UUID id) {
         internshipApplicationService.delete(id);
         return ResponseEntity

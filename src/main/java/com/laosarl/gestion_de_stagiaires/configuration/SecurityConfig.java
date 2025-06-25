@@ -49,8 +49,12 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
                                         .requestMatchers(HttpMethod.POST, "/register/student")
                                         .requestMatchers(HttpMethod.POST,"/internship")
+                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/accept")
+                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/reject")
                                         .requestMatchers(HttpMethod.GET,"/internship")
                                         .requestMatchers(HttpMethod.PATCH,"/internship")
+                                        .requestMatchers(HttpMethod.PATCH,"/internship/{id}")
+                                        .requestMatchers(HttpMethod.GET,"/internship/{id}")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
@@ -60,8 +64,12 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/register/student").permitAll()
                                         .requestMatchers(HttpMethod.POST,"/internship").permitAll()
                                         .requestMatchers(HttpMethod.GET,"/internship").permitAll()
+                                        .requestMatchers(HttpMethod.GET,"/internship/{id}").permitAll()
                                         .requestMatchers(HttpMethod.DELETE,"/internship").permitAll()
                                         .requestMatchers(HttpMethod.PATCH,"/internship").permitAll()
+                                        .requestMatchers(HttpMethod.PATCH,"/internship/{id}").permitAll()
+                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/accept").permitAll()
+                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/reject").permitAll()
                 )
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.domain.student;
+package com.laosarl.gestion_de_stagiaires.domain.supervisor;
 
 import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import jakarta.persistence.Column;
@@ -14,15 +14,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "students")
-public class Student extends User {
+@Table(name = "supervisor")
+public class Supervisor extends User {
 
-    @Column(name = "study_level")
-    private String studyLevel;
 
-    @Column(name = "speciality")
-    private String speciality;
 
-    @Column(name = "university")
-    private String university;
+    @Column(name = "role_in_company")
+    private String companyRole;
+
+
 }

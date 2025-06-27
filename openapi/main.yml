@@ -29,84 +29,92 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenDTO'
-  /register/student:
+  /register/supervisor:
     post:
       tags:
-        - Student
-      summary: Create a new student
-      description: Create a new student
-      operationId: createStudent
+        - Supervisor
+      summary: Create a new supervisor
+      operationId: createSupervisor
       requestBody:
-        description: data needed to create a student
+        description: data needed to create a supervisor
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StudentRegistrationRequestDTO'
+              $ref: '#/components/schemas/SupervisorRegistrationRequestDTO'
       responses:
         201:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudentIdResponseDTO'
-  /students:
+                $ref: '#/components/schemas/SupervisorIdResponseDTO'
+  /supervisors:
     get:
       tags:
-        - Student
-      summary: get student User
-      description: get student User
-      operationId: getCurrentStudent
+        - Supervisor
+      summary: Get all supervisors
+      operationId: getAllSupervisors
       responses:
         200:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudentDTO'
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupervisorDTO'
+
+  /supervisors/{id}:
+    get:
+      tags:
+        - Supervisor
+      summary: Get supervisor by ID
+      operationId: getSupervisorById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Supervisor found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupervisorDTO'
+        404:
+          description: Supervisor not found
+
     put:
       tags:
-        - Auth
-      summary: update a student
-      description: update an student
-      operationId: updateStudent
+        - Supervisor
+      summary: Update supervisor
+      operationId: updateSupervisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
-        description: Data that will be used to modify the student
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateStudentDTO'
+              $ref: '#/components/schemas/UpdateSupervisorDTO'
       responses:
         204:
-          description: successful operation
-  /students/{id}:
-    get:
-      tags:
-        - Student
-      summary: Get a student by ID
-      operationId: getStudentById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Student found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StudentDTO'
-        '404':
-          description: Student not found
+          description: Supervisor updated
+
     delete:
       tags:
-        - Student
-      summary: Delete a student
-      operationId: deleteStudent
+        - Supervisor
+      summary: Delete supervisor
+      operationId: deleteSupervisor
       parameters:
         - name: id
           in: path
@@ -115,10 +123,9 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
-          description: Student successfully deleted
-        '404':
-          description: Student not found
+        204:
+          description: Supervisor deleted
+
 
 
 
@@ -285,6 +292,42 @@ paths:
         '404':
           description: Candidature non trouvée
 
+  /internship/{id}/assign-supervisor:
+    post:
+      tags:
+        - InternshipApplication
+      summary: Assign a supervisor to an internship application
+      operationId: assignSupervisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Internship application ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                supervisorId:
+                  type: string
+                  format: uuid
+              required:
+                - supervisorId
+      responses:
+        200:
+          description: Supervisor assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+        404:
+          description: Not found
+
 
 components:
   schemas:
@@ -314,45 +357,7 @@ components:
         username:
           type: string
           example: johndoe
-    CreateStudentRequestDTO:
-      type: object
-      required:
-        - password
-        - email
-        - studyLevel
-        - speciality
-        - university
-      properties:
-        username:
-          type: string
-          example: aurellefoko
-        password:
-          type: string
-          format: password
-          example: motdepasse123
-        email:
-          type: string
-          format: email
-          example: aurelle@example.com
-        firstName:
-          type: string
-          example: Aurelle
-        lastName:
-          type: string
-          example: Foko
-        studyLevel:
-          type: string
-          example: Licence 3
-        speciality:
-          type: string
-          example: Informatique
-        university:
-          type: string
-          example: UCAC-ICAM
-        registrationDate:
-          type: string
-          format: date
-          example: 2024-09-01
+
     AuthRequestDTO:
       type: object
       properties:
@@ -365,28 +370,7 @@ components:
       properties:
         value:
           type: string
-    StudentRegistrationRequestDTO:
-      type: object
-      required:
-        - password
-        - email
-        - phoneNumber
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        firstname:
-          type: string
-        lastname:
-          type: string
-        dateOfBirth:
-          type: string
-          format: date
-        gender:
-          $ref: '#/components/schemas/GenderDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
+
     GenderDTO:
       type: string
       enum:
@@ -401,65 +385,8 @@ components:
           description: created user ID
         accessToken:
           $ref: '#/components/schemas/TokenDTO'
-    StudentDTO:
-      type: object
-      required:
-        - id
-        - username
-        - email
-        - studyLevel
-        - speciality
-        - university
-      properties:
-        id:
-          type: string
-          format: uuid
-        username:
-          type: string
-          example: aurellefoko
-        email:
-          type: string
-          format: email
-          example: aurelle@example.com
-        firstName:
-          type: string
-          example: Aurelle
-        lastName:
-          type: string
-          example: Foko
-        studyLevel:
-          type: string
-          example: Licence 3
-        speciality:
-          type: string
-          example: Informatique
-        university:
-          type: string
-          example: UCAC-ICAM
-        registrationDate:
-          type: string
-          format: date
-          example: 2024-09-01
-        gender:
-          $ref: '#/components/schemas/GenderDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
-    UpdateStudentDTO:
-      type: object
-      properties:
-        firstname:
-          type: string
-          description: student firstname
-        lastname:
-          type: string
-          description: student lastname
-        dateOfBirth:
-          type: string
-          format: date
-        gender:
-          $ref: '#/components/schemas/GenderDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
+
+
     PhoneNumberDTO:
       type: object
       properties:
@@ -469,7 +396,68 @@ components:
         countryCode:
           type: string
           example: 237
-    StudentIdResponseDTO:
+
+    SupervisorDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name:
+          type: string
+        companyRole:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          $ref: '#/components/schemas/GenderDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+
+    UpdateSupervisorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        companyRole:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          $ref: '#/components/schemas/GenderDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+    SupervisorRegistrationRequestDTO:
+      type: object
+      required:
+        - email
+        - password
+        - name
+        - companyRole
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        gender:
+          $ref: '#/components/schemas/GenderDTO'
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumberDTO'
+        companyRole:
+          type: string
+          description: Role in the company (e.g., Manager, Tutor)
+
+
+    SupervisorIdResponseDTO:
       type: object
       properties:
         value:

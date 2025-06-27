@@ -1,7 +1,7 @@
 package com.laosarl.gestion_de_stagiaires.Service;
 
-import com.laosarl.gestion_de_stagiaires.Repository.StudentRepository;
-import com.laosarl.gestion_de_stagiaires.domain.student.Student;
+import com.laosarl.gestion_de_stagiaires.Repository.SupervisorRepository;
+import com.laosarl.gestion_de_stagiaires.domain.supervisor.Supervisor;
 import com.laosarl.gestion_de_stagiaires.domain.token.Token;
 import com.laosarl.gestion_de_stagiaires.domain.token.TokenType;
 import com.laosarl.gestion_de_stagiaires.domain.user.CurrentUserNotFound;
@@ -9,14 +9,15 @@ import com.laosarl.gestion_de_stagiaires.domain.user.Role;
 import com.laosarl.gestion_de_stagiaires.domain.user.User;
 import com.laosarl.gestion_de_stagiaires.exceptions.EmailAlreadyUsedException;
 import com.laosarl.gestion_de_stagiaires.exceptions.StudentNotFoundException;
-import com.laosarl.gestion_de_stagiaires.Service.mapper.StudentMapper;
+import com.laosarl.gestion_de_stagiaires.Service.mapper.SupervisorMapper;
 import com.laosarl.gestion_de_stagiaires.Repository.TokenRepository;
 import com.laosarl.internship_management.model.AuthRequestDTO;
-import com.laosarl.internship_management.model.StudentDTO;
-import com.laosarl.internship_management.model.StudentIdResponseDTO;
-import com.laosarl.internship_management.model.StudentRegistrationRequestDTO;
+import com.laosarl.internship_management.model.SupervisorDTO;
+import com.laosarl.internship_management.model.SupervisorIdResponseDTO;
+import com.laosarl.internship_management.model.SupervisorRegistrationRequestDTO;
 import com.laosarl.internship_management.model.TokenDTO;
-import com.laosarl.internship_management.model.UpdateStudentDTO;
+import com.laosarl.internship_management.model.UpdateSupervisorDTO;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +35,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class StudentService {
+public class SupervisorService {
 
-    private final StudentRepository studentRepository;
+    private final SupervisorRepository supervisorRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final TokenRepository tokenSpringRepository;
-    private final StudentMapper studentMapper;
+    private final SupervisorMapper supervisorMapper;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -52,14 +53,14 @@ public class StudentService {
                 )
         );
 
-        Student student = studentRepository.findByEmail(authRequestDTO.getEmail())
+        Supervisor supervisor = supervisorRepository.findByEmail(authRequestDTO.getEmail())
                 .orElseThrow(() -> new StudentNotFoundException(
                         "Student with email " + authRequestDTO.getEmail() + " not found"
                 ));
 
-        String jwtToken = jwtService.generateToken(Map.of("role", student.getRole()), student);
-        revokeAllUserTokens(student);
-        saveUserToken(student, jwtToken);
+        String jwtToken = jwtService.generateToken(Map.of("role", supervisor.getRole()), supervisor);
+        revokeAllUserTokens(supervisor);
+        saveUserToken(supervisor, jwtToken);
 
         return new TokenDTO().value(jwtToken);
     }
@@ -82,53 +83,64 @@ public class StudentService {
         tokenSpringRepository.save(token);
     }
 
-    public StudentIdResponseDTO createStudent(StudentRegistrationRequestDTO studentRegistrationRequestDTO) {
-        if (studentRepository.existsByEmail((studentRegistrationRequestDTO.getEmail()))) {
+    public SupervisorIdResponseDTO createSupervisor(SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO) {
+        if (supervisorRepository.existsByEmail((supervisorRegistrationRequestDTO.getEmail()))) {
             throw new EmailAlreadyUsedException("Email already in use");
         }
-        Student student = studentMapper.toStudent(studentRegistrationRequestDTO);
-        student.setPassword(passwordEncoder.encode(student.getPassword()));
-        student.setRole(Role.STUDENT);
+        Supervisor supervisor = supervisorMapper.toSupervisor(supervisorRegistrationRequestDTO);
+        supervisor.setPassword(passwordEncoder.encode(supervisor.getPassword()));
+        supervisor.setRole(Role.SUPERVISOR);
 
-        Student saved = studentRepository.save(student);
+        Supervisor saved = supervisorRepository.save(supervisor);
 
-        log.info("Event: new student created with ID: \n {}", saved.getId());
-        return new StudentIdResponseDTO().value(saved.getId());
+        log.info("Event: new Supervisor created with ID: \n {}", saved.getId());
+        return new SupervisorIdResponseDTO().value(saved.getId());
     }
 
     @SneakyThrows
-    public StudentDTO getUserByUsername(String username) {
-        Student studentNew = getUserByEmail(username);
-        return studentMapper.toDTO(studentNew);
+    public SupervisorDTO getUserByUsername(String username) {
+        Supervisor supervisorNew = getUserByEmail(username);
+        return supervisorMapper.toDTO(supervisorNew);
     }
 
-    private Student getUserByEmail(String username) throws CurrentUserNotFound {
-        return studentRepository
+    private Supervisor getUserByEmail(String username) throws CurrentUserNotFound {
+        return supervisorRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new CurrentUserNotFound(""));
     }
 
     @SneakyThrows
-    public void updateUser(String username, UpdateStudentDTO updateStudentDTO) {
-        Student user = getUserByEmail(username);
-        studentMapper.copyDataFromUpdateUserDTOToUser(updateStudentDTO, user);
-        studentRepository.save(user);
+    public void updateUser(String username, UpdateSupervisorDTO updateSupervisorDTO) {
+        Supervisor user = getUserByEmail(username);
+        supervisorMapper.copyDataFromUpdateUserDTOToUser(updateSupervisorDTO, user);
+        supervisorRepository.save(user);
     }
 
 
-    public void deleteStudent(UUID id) {
-        studentRepository.deleteById(id);
+    public void updateSupervisor(UUID id, UpdateSupervisorDTO updateSupervisorDTO) {
+        Supervisor supervisor = supervisorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Supervisor not found with id: " + id));
+
+        // Mapper les champs depuis UpdateSupervisorDTO vers l'entité Supervisor
+        supervisorMapper.copyDataFromUpdateUserDTOToUser(updateSupervisorDTO, supervisor);
+
+        supervisorRepository.save(supervisor);
+
     }
 
-    public List<StudentDTO> getAllStudents() {
-        return studentRepository.findAll().stream()
-                .map(studentMapper::toDTO)
+    public void deleteSupervisor(UUID id) {
+        supervisorRepository.deleteById(id);
+    }
+
+    public List<SupervisorDTO> getAllStudents() {
+        return supervisorRepository.findAll().stream()
+                .map(supervisorMapper::toDTO)
                 .toList();
     }
 
-    public StudentDTO getStudentById(UUID id) {
-        return studentRepository.findById(id)
-                .map(studentMapper::toDTO)
+    public SupervisorDTO getSupervisorById(UUID id) {
+        return supervisorRepository.findById(id)
+                .map(supervisorMapper::toDTO)
                 .orElseThrow(() -> new StudentNotFoundException("Student with id " + id + " not found"));
    }
 }

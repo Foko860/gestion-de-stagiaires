@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface TokenRepository extends JpaRepository<Token, UUID> {
 
     @Query("""
-        select t from Token t inner join Student u on t.user.id = u.id
+        select t from Token t inner join Supervisor u on t.user.id = u.id
         where u.id = :userId and (t.expired = false and t.revoked = false)
         """)
     List<Token> findAllValidTokensByUserId(UUID userId);

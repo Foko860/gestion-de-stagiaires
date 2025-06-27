@@ -36,13 +36,10 @@ public abstract class User extends EntityBase implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "firstname")
-    private String firstname;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "lastname")
-    private String lastname;
-
-    @Column(name = "date_of_bird")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Embedded
@@ -56,11 +53,11 @@ public abstract class User extends EntityBase implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokenList;
-
     @Embedded
     private ProfileImage profileImage;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokenList;
 
 
     @Override

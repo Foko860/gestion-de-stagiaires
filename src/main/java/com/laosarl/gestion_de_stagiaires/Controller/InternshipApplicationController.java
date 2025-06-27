@@ -18,6 +18,11 @@ public class InternshipApplicationController implements InternshipApplicationApi
     private final InternshipApplicationService internshipApplicationService;
 
     @Override
+    public ResponseEntity<InternshipApplicationResponseDTO> assignSupervisor(UUID id, AssignSupervisorRequest assignSupervisorRequest) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<InternshipApplicationResponseDTO> createInternshipApplication(InternshipApplicationRequestDTO internshipApplicationRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -62,9 +67,9 @@ public class InternshipApplicationController implements InternshipApplicationApi
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> patchInternshipApplication(UUID id, UpdateInternshipApplicationDTO dto) {
+    public ResponseEntity<InternshipApplicationResponseDTO> patchInternshipApplication(UUID id, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(internshipApplicationService.patch(id, dto));
+                .body(internshipApplicationService.patch(id, updateInternshipApplicationDTO));
     }
 }

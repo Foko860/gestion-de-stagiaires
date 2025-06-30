@@ -1,0 +1,6 @@
+### Upload document test
+POST http://localhost:8185/api/internship-management/v1/documents/upload
+Content-Type: application/pdf
+
+< ./example.pdf
+

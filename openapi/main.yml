@@ -318,10 +318,70 @@ paths:
           description: Internship or Supervisor not found
         '400':
           description: Cannot assign supervisor. Internship is not accepted.
-
-
+  /documents/upload:
+    post:
+      tags:
+        - Documents
+      summary: Upload a PDF document
+      description: Upload a single PDF document to the server as multipart/form-data
+      operationId: uploadPdfDocument
+      requestBody:
+        description: PDF file to upload
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: PDF file to upload
+      responses:
+        201:
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedDocumentIdDTO'
+        400:
+          description: Invalid file format or size
+        500:
+          description: Internal server error
+  /documents/download/{id}:
+    get:
+      tags:
+        - Documents
+      summary: Download a PDF document by ID
+      description: Download the PDF file associated with the given document ID
+      operationId: downloadPdfDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the document to download
+          schema:
+            type: string
+      responses:
+        200:
+          description: PDF file retrieved successfully
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        404:
+          description: Document not found
+        500:
+          description: Internal server error
 components:
   schemas:
+    CreatedDocumentIdDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
     LoginRequestDTO:
       type: object
       required:
@@ -376,8 +436,6 @@ components:
           description: created user ID
         accessToken:
           $ref: '#/components/schemas/TokenDTO'
-
-
     PhoneNumberDTO:
       type: object
       properties:
@@ -387,7 +445,6 @@ components:
         countryCode:
           type: string
           example: 237
-
     SupervisorDTO:
       type: object
       properties:
@@ -398,8 +455,6 @@ components:
           type: string
         companyRole:
           type: string
-
-
     UpdateSupervisorDTO:
       type: object
       properties:
@@ -407,7 +462,6 @@ components:
           type: string
         companyRole:
           type: string
-
     SupervisorRegistrationRequestDTO:
       type: object
       required:
@@ -539,7 +593,6 @@ components:
           format: date
         phoneNumber: # ✅ Ajoutez ceci aussi
           $ref: '#/components/schemas/PhoneNumberDTO'
-
     AssignSupervisorRequestDTO:
       type: object
       required:

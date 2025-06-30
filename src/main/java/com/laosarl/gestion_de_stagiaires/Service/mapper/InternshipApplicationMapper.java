@@ -1,12 +1,14 @@
 package com.laosarl.gestion_de_stagiaires.Service.mapper;
 
+import com.laosarl.gestion_de_stagiaires.Repository.DocumentRepository;
 import com.laosarl.gestion_de_stagiaires.domain.InternshipApplication;
+import com.laosarl.gestion_de_stagiaires.domain.document.Document;
 import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
-import com.laosarl.internship_management.model.InternshipApplicationRequestDTO;
-import com.laosarl.internship_management.model.InternshipApplicationResponseDTO;
-import com.laosarl.internship_management.model.UpdateInternshipApplicationDTO;
-import com.laosarl.internship_management.model.PhoneNumberDTO;
+import com.laosarl.internship_management.model.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.mapstruct.*;
+
+import java.util.UUID;
 
 @Mapper(
         componentModel = "spring",
@@ -14,55 +16,76 @@ import org.mapstruct.*;
 )
 public interface InternshipApplicationMapper {
 
-    // ----- Mapping DTO -> Entity -----
+    // ===== Mapping DTO -> Entity =====
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "firstName")
-    @Mapping(target = "lastName")
-    @Mapping(target = "studyLevel")
-    @Mapping(target = "speciality")
-    @Mapping(target = "university")
-    @Mapping(target = "cv", source = "cv")
-    @Mapping(target = "email")
-    @Mapping(target = "startDate")
-    @Mapping(target = "endDate")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "studyLevel", source = "studyLevel")
+    @Mapping(target = "speciality", source = "speciality")
+    @Mapping(target = "university", source = "university")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "startDate", source = "startDate")
+    @Mapping(target = "endDate", source = "endDate")
+    @Mapping(target = "cv", source = "cv", qualifiedByName = "mapUuidToDocument")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberDTOToPhoneNumber")
-    InternshipApplication toEntity(InternshipApplicationRequestDTO internshipApplicationRequestDTO);
+    InternshipApplication toEntity(
+            InternshipApplicationRequestDTO internshipApplicationRequestDTO,
+            @Context DocumentRepository documentRepository
+    );
 
-    // ----- Mapping Entity -> DTO -----
+    // ===== Mapping Entity -> DTO =====
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "internshipId")
-    @Mapping(target = "firstName")
-    @Mapping(target = "lastName")
-    @Mapping(target = "studyLevel")
-    @Mapping(target = "speciality")
-    @Mapping(target = "university")
-    @Mapping(target = "email")
-    @Mapping(target = "cv", source = "cv")
-    @Mapping(target = "startDate")
-    @Mapping(target = "endDate")
-    @Mapping(target = "submissionDate")
-    @Mapping(target = "status")
+    @Mapping(target = "internshipId", source = "internshipId")
+    @Mapping(target = "firstName", source = "firstName")
+    @Mapping(target = "lastName", source = "lastName")
+    @Mapping(target = "studyLevel", source = "studyLevel")
+    @Mapping(target = "speciality", source = "speciality")
+    @Mapping(target = "university", source = "university")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "startDate", source = "startDate")
+    @Mapping(target = "endDate", source = "endDate")
+    @Mapping(target = "submissionDate", source = "submissionDate")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "cv", source = "cv", qualifiedByName = "mapDocumentToUuid")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberToPhoneNumberDTO")
     InternshipApplicationResponseDTO toResponseDTO(InternshipApplication entity);
 
-    // ----- Partial Update DTO -> Entity -----
+    // ===== Partial Update DTO -> Entity =====
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberDTOToPhoneNumber")
-    void updateFromDTO(UpdateInternshipApplicationDTO updateInternshipApplicationDTO, @MappingTarget InternshipApplication entity);
+    @Mapping(target = "cv", source = "cv", qualifiedByName = "mapUuidToDocument")
+    void updateFromDTO(
+            UpdateInternshipApplicationDTO dto,
+            @MappingTarget InternshipApplication entity,
+            @Context DocumentRepository documentRepository
+    );
 
-    // ----- Mapping embedded PhoneNumber -----
+    // ===== Mapping for PhoneNumber =====
     @Named("mapPhoneNumberDTOToPhoneNumber")
-    default PhoneNumber mapPhoneNumberDTOToPhoneNumber(PhoneNumberDTO phoneNumberDTO) {
-        if (phoneNumberDTO == null) return null;
-        return new PhoneNumber(phoneNumberDTO.getCountryCode(), phoneNumberDTO.getNumber());
+    default PhoneNumber mapPhoneNumberDTOToPhoneNumber(PhoneNumberDTO dto) {
+        if (dto == null) return null;
+        return new PhoneNumber(dto.getCountryCode(), dto.getNumber());
     }
 
     @Named("mapPhoneNumberToPhoneNumberDTO")
     default PhoneNumberDTO mapPhoneNumberToPhoneNumberDTO(PhoneNumber entity) {
         if (entity == null) return null;
-        PhoneNumberDTO phoneNumberDTO = new PhoneNumberDTO();
-        phoneNumberDTO.setCountryCode(entity.getCountryCode());
-        phoneNumberDTO.setNumber(entity.getNumber());
-        return phoneNumberDTO;
+        PhoneNumberDTO dto = new PhoneNumberDTO();
+        dto.setCountryCode(entity.getCountryCode());
+        dto.setNumber(entity.getNumber());
+        return dto;
+    }
+
+    // ===== Mapping UUID <-> Document =====
+    @Named("mapUuidToDocument")
+    default Document mapUuidToDocument(UUID id, @Context DocumentRepository documentRepository) {
+        if (id == null) return null;
+        return documentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Document not found with id: " + id));
+    }
+
+    @Named("mapDocumentToUuid")
+    default UUID mapDocumentToUuid(Document document) {
+        return document != null ? document.getId() : null;
     }
 }

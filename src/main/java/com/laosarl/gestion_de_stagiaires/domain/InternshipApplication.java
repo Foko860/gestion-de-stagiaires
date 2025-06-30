@@ -1,5 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.domain;
 
+import com.laosarl.gestion_de_stagiaires.domain.document.Document;
 import com.laosarl.gestion_de_stagiaires.domain.supervisor.Supervisor;
 import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
 import jakarta.persistence.Column;
@@ -7,6 +8,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -49,8 +51,9 @@ public class InternshipApplication {
     @Column(name = "university")
     private String university;
 
-    @Column(name = "curriculum_vitae")
-    private String cv;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "curriculum_vitae", nullable = false)
+    private Document cv;
 
     @Column(name = "email")
     private String email;

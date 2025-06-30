@@ -1,5 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.domain;
 
+import com.laosarl.gestion_de_stagiaires.domain.supervisor.Supervisor;
 import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -8,6 +9,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +33,7 @@ public class InternshipApplication {
     @Id
     @GeneratedValue
     @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
-    private UUID id;
+    private UUID internshipId;
 
     @Column(name = "first_name")
     private String  firstName;
@@ -49,6 +52,8 @@ public class InternshipApplication {
     @Column(name = "curriculum_vitae")
     private String cv;
 
+    @Column(name = "email")
+    private String email;
     @Column(name= "start_date")
     private LocalDate startDate;
 
@@ -62,5 +67,9 @@ public class InternshipApplication {
     private InternshipApplicationStatus status;
 
     private LocalDate submissionDate;
+
+    @ManyToOne
+    @JoinColumn(name = "supervisor_id")
+    private Supervisor supervisor;
 
 }

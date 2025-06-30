@@ -17,9 +17,13 @@ public class InternshipApplicationController implements InternshipApplicationApi
 
     private final InternshipApplicationService internshipApplicationService;
 
+
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> assignSupervisor(UUID id, AssignSupervisorRequest assignSupervisorRequest) {
-        return null;
+    public ResponseEntity<Void> assignSupervisorToInternship(UUID internshipId, AssignSupervisorRequestDTO assignSupervisorRequestDTO) {
+        internshipApplicationService.assignSupervisor(internshipId, assignSupervisorRequestDTO.getId());
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     @Override
@@ -29,6 +33,8 @@ public class InternshipApplicationController implements InternshipApplicationApi
                 .body(internshipApplicationService.create(internshipApplicationRequestDTO));
     }
 
+
+
     @Override
     public ResponseEntity<List<InternshipApplicationResponseDTO>> getAllInternshipApplications() {
         return ResponseEntity
@@ -37,39 +43,44 @@ public class InternshipApplicationController implements InternshipApplicationApi
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> getInternshipApplicationById(UUID id) {
+    public ResponseEntity<InternshipApplicationResponseDTO> getInternshipApplicationById(UUID internshipId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(internshipApplicationService.getById(id));
+                .body(internshipApplicationService.getById(internshipId));
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> internshipIdAcceptPost(UUID id) {
+    public ResponseEntity<InternshipApplicationResponseDTO> internshipInternshipIdAcceptPost(UUID internshipId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(internshipApplicationService.accept(id));
-    }
-
-    @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> internshipIdRejectPost(UUID id, InternshipIdRejectPostRequest internshipIdRejectPostRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(internshipApplicationService.reject(id, internshipIdRejectPostRequest != null ? internshipIdRejectPostRequest.getReason() : null));
+                .body(internshipApplicationService.accept(internshipId));
 
     }
 
     @Override
-    public ResponseEntity<Void> deleteInternshipApplication(UUID id) {
-        internshipApplicationService.delete(id);
+    public ResponseEntity<InternshipApplicationResponseDTO> internshipInternshipIdRejectPost(UUID internshipId, InternshipInternshipIdRejectPostRequest internshipInternshipIdRejectPostRequest) {
+        return  ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        internshipApplicationService.reject(
+                                internshipId,
+                                internshipInternshipIdRejectPostRequest != null ? internshipInternshipIdRejectPostRequest.getReason() : null
+                        ));
+    }
+
+
+    @Override
+    public ResponseEntity<Void> deleteInternshipApplication(UUID internshipId) {
+        internshipApplicationService.delete(internshipId);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> patchInternshipApplication(UUID id, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
+    public ResponseEntity<InternshipApplicationResponseDTO> patchInternshipApplication(UUID internshipId, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(internshipApplicationService.patch(id, updateInternshipApplicationDTO));
+                .body(internshipApplicationService.patch(internshipId, updateInternshipApplicationDTO));
     }
 }

@@ -23,34 +23,22 @@ public interface SupervisorMapper {
 
     // ----- Mapping DTO vers Supervisor -----
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "email", source = "email")
-    @Mapping(target = "password", source = "password")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "companyRole", source = "companyRole")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
-    @Mapping(target = "gender", source = "gender")
-    @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "fromPhoneNumberDTOToPhoneNumber")
-    Supervisor toSupervisor(SupervisorRegistrationRequestDTO dto);
+       Supervisor toSupervisor(SupervisorRegistrationRequestDTO dto);
 
     // ----- Mapping Supervisor vers DTO -----
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "email", source = "email")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "companyRole", source = "companyRole")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
-    @Mapping(target = "gender", source = "gender")
-    @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "fromPhoneNumberToPhoneNumberDTO")
-    SupervisorDTO toDTO(Supervisor supervisor);
+       SupervisorDTO toDTO(Supervisor supervisor);
 
     // ----- Update partiel -----
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "companyRole", source = "companyRole")
-    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
-    @Mapping(target = "gender", source = "gender")
-    @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "fromPhoneNumberDTOToPhoneNumber")
-    void copyDataFromUpdateUserDTOToUser(UpdateSupervisorDTO updateSupervisorDTO, @MappingTarget Supervisor supervisor);
+       void copyDataFromUpdateUserDTOToUser(UpdateSupervisorDTO updateSupervisorDTO, @MappingTarget Supervisor supervisor);
 
     // ----- Mapping PhoneNumberDTO vers PhoneNumber -----
     @Named("fromPhoneNumberDTOToPhoneNumber")

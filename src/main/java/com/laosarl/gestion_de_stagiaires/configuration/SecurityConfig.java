@@ -23,91 +23,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
-    private final LogoutService logoutService;
-
     @Bean
-    @Order(0)
-    public SecurityFilterChain healthEndpoints(HttpSecurity http) throws Exception {
-        return http.securityMatcher("/actuator/health/**", "/actuator/swagger-ui")
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-                .build();
-    }
-
-    @ConditionalOnProperty(
-            name = "spring.security.enabled",
-            havingValue = "true",
-            matchIfMissing = true)
-    @Bean
-    @Order(1)
-    public SecurityFilterChain publicEndpoints(HttpSecurity http) throws Exception {
-        log.info("Public filter chain start");
-        return http.securityMatchers(
-                        requestMatcherConfigurer ->
-                                requestMatcherConfigurer
-                                        .requestMatchers(HttpMethod.POST, "/auth/login")
-                                        .requestMatchers(HttpMethod.POST, "/register/supervisor")
-                                        .requestMatchers(HttpMethod.POST,"/internship")
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/accept")
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/reject")
-                                        .requestMatchers(HttpMethod.GET,"/internship")
-                                        .requestMatchers(HttpMethod.PATCH,"/internship")
-                                        .requestMatchers(HttpMethod.PATCH,"/internship/{id}")
-                                        .requestMatchers(HttpMethod.GET,"/internship/{id}")
-                                        .requestMatchers(HttpMethod.GET, "/supervisors")
-                                        .requestMatchers(HttpMethod.GET, "/supervisors/{id}")
-                )
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        authorizationManagerRequestMatcherRegistry ->
-                                authorizationManagerRequestMatcherRegistry
-                                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/register/supervisor").permitAll()
-                                        .requestMatchers(HttpMethod.POST,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.GET,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.GET,"/internship/{id}").permitAll()
-                                        .requestMatchers(HttpMethod.DELETE,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH,"/internship/{id}").permitAll()
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/accept").permitAll()
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/reject").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/supervisors").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/supervisors/{id}").permitAll()
-                )
-                .build();
-    }
-
-    @Bean
-    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authz) ->
-                        authz
-                                .requestMatchers(HttpMethod.GET, "/auth/user").authenticated()
-                                .anyRequest().denyAll()
-                )
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                        .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler(logoutService)
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()));
-
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
         return http.build();
-    }
-
-    @ConditionalOnProperty(name = "spring.security.enabled", havingValue = "false")
-    @Bean
-    public SecurityFilterChain disabledSecurityFilterChain(HttpSecurity httpSecurity)
-            throws Exception {
-        return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        authorizationManagerRequestMatcherRegistry ->
-                                authorizationManagerRequestMatcherRegistry.anyRequest().permitAll())
-                .build();
     }
 }

@@ -44,7 +44,10 @@ public  class SupervisorController implements AuthApi, SupervisorApi {
 
     @Override
     public ResponseEntity<List<SupervisorDTO>> getAllSupervisors() {
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(supervisorService.getAllSupervisors());
+
     }
 
     /*@Override
@@ -65,7 +68,8 @@ public  class SupervisorController implements AuthApi, SupervisorApi {
 
     @Override
     public ResponseEntity<TokenDTO> loginUser(AuthRequestDTO authRequestDTO) {
-        return ResponseEntity.ok(supervisorService.loginUser(authRequestDTO));
+        return null;
+        /*ResponseEntity.ok(supervisorService.loginUser(authRequestDTO));*/
     }
 
     @Override

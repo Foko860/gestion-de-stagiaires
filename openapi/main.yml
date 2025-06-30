@@ -166,14 +166,14 @@ paths:
 
 
 
-  /internship/{id}:
+  /internship/{internshipId}:
     get:
       tags:
         - InternshipApplication
       summary: Get internship application by ID
       operationId: getInternshipApplicationById
       parameters:
-        - name: id
+        - name: internshipId
           in: path
           required: true
           schema:
@@ -195,7 +195,7 @@ paths:
       description: Update one or more fields of an internship application
       operationId: patchInternshipApplication
       parameters:
-        - name: id
+        - name: internshipId
           in: path
           required: true
           description: UUID of the internship application
@@ -226,7 +226,7 @@ paths:
       summary: Delete internship application by ID
       operationId: deleteInternshipApplication
       parameters:
-        - name: id
+        - name: internshipId
           in: path
           required: true
           schema:
@@ -235,13 +235,13 @@ paths:
       responses:
         '204':
           description: Internship application deleted
-  /internship/{id}/accept:
+  /internship/{internshipId}/accept:
     post:
       summary: Accepter une candidature
       tags:
         - InternshipApplication
       parameters:
-        - name: id
+        - name: internshipId
           in: path
           required: true
           schema:
@@ -258,13 +258,13 @@ paths:
         '404':
           description: Candidature non trouvée
 
-  /internship/{id}/reject:
+  /internship/{internshipId}/reject:
     post:
       summary: Refuser une candidature
       tags:
         - InternshipApplication
       parameters:
-        - name: id
+        - name: internshipId
           in: path
           required: true
           schema:
@@ -292,41 +292,32 @@ paths:
         '404':
           description: Candidature non trouvée
 
-  /internship/{id}/assign-supervisor:
+  /internship/{internshipId}/assign-supervisor:
     post:
       tags:
         - InternshipApplication
-      summary: Assign a supervisor to an internship application
-      operationId: assignSupervisor
+      summary: Assign a supervisor to an accepted internship application
+      operationId: assignSupervisorToInternship
       parameters:
-        - name: id
+        - name: internshipId
           in: path
           required: true
           schema:
             type: string
             format: uuid
-          description: Internship application ID
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                supervisorId:
-                  type: string
-                  format: uuid
-              required:
-                - supervisorId
+              $ref: '#/components/schemas/AssignSupervisorRequestDTO'
       responses:
-        200:
-          description: Supervisor assigned
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
-        404:
-          description: Not found
+        '204':
+          description: Supervisor assigned successfully
+        '404':
+          description: Internship or Supervisor not found
+        '400':
+          description: Cannot assign supervisor. Internship is not accepted.
 
 
 components:
@@ -403,19 +394,11 @@ components:
         id:
           type: string
           format: uuid
-        email:
-          type: string
         name:
           type: string
         companyRole:
           type: string
-        dateOfBirth:
-          type: string
-          format: date
-        gender:
-          $ref: '#/components/schemas/GenderDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
+
 
     UpdateSupervisorDTO:
       type: object
@@ -424,18 +407,10 @@ components:
           type: string
         companyRole:
           type: string
-        dateOfBirth:
-          type: string
-          format: date
-        gender:
-          $ref: '#/components/schemas/GenderDTO'
-        phoneNumber:
-          $ref: '#/components/schemas/PhoneNumberDTO'
+
     SupervisorRegistrationRequestDTO:
       type: object
       required:
-        - email
-        - password
         - name
         - companyRole
       properties:
@@ -476,6 +451,7 @@ components:
           - startDate
           - endDate
           - phoneNumber
+          - email
       properties:
           firstName:
             type: string
@@ -486,6 +462,8 @@ components:
           speciality:
             type: string
           university:
+            type: string
+          email:
             type: string
           cv:
             type: string
@@ -502,7 +480,7 @@ components:
     InternshipApplicationResponseDTO:
       type: object
       properties:
-        id:
+        internshipId:
           type: string
           format: uuid
         firstName:
@@ -510,6 +488,8 @@ components:
         lastName:
           type: string
         studyLevel:
+          type: string
+        email:
           type: string
         speciality:
           type: string
@@ -541,6 +521,8 @@ components:
           type: string
         lastName:
           type: string
+        email:
+          type: string
         studyLevel:
           type: string
         speciality:
@@ -557,3 +539,12 @@ components:
           format: date
         phoneNumber: # ✅ Ajoutez ceci aussi
           $ref: '#/components/schemas/PhoneNumberDTO'
+
+    AssignSupervisorRequestDTO:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid

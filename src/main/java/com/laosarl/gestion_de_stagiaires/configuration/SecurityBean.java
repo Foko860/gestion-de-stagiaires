@@ -1,4 +1,4 @@
-package com.laosarl.gestion_de_stagiaires.configuration;
+/*package com.laosarl.gestion_de_stagiaires.configuration;
 
 import com.laosarl.gestion_de_stagiaires.Repository.SupervisorRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class SecurityBean {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> supervisorRepository.findByEmail(username)
+        return   username -> supervisorRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
@@ -41,4 +41,4 @@ public class SecurityBean {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-}
+}*/

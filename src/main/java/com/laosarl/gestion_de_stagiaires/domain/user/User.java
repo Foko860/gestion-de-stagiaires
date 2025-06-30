@@ -28,7 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User extends EntityBase implements UserDetails {
+public abstract class User extends EntityBase  {
 
     @Column(name = "email")
     private String email;
@@ -36,7 +36,7 @@ public abstract class User extends EntityBase implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable= false)
     private String name;
 
     @Column(name = "date_of_birth")
@@ -60,7 +60,7 @@ public abstract class User extends EntityBase implements UserDetails {
     private List<Token> tokenList;
 
 
-    @Override
+    /*@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
@@ -93,5 +93,5 @@ public abstract class User extends EntityBase implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    }*/
 }

@@ -22,6 +22,7 @@ public interface InternshipApplicationMapper {
     @Mapping(target = "speciality")
     @Mapping(target = "university")
     @Mapping(target = "cv", source = "cv")
+    @Mapping(target = "email")
     @Mapping(target = "startDate")
     @Mapping(target = "endDate")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberDTOToPhoneNumber")
@@ -29,12 +30,13 @@ public interface InternshipApplicationMapper {
 
     // ----- Mapping Entity -> DTO -----
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id")
+    @Mapping(target = "internshipId")
     @Mapping(target = "firstName")
     @Mapping(target = "lastName")
     @Mapping(target = "studyLevel")
     @Mapping(target = "speciality")
     @Mapping(target = "university")
+    @Mapping(target = "email")
     @Mapping(target = "cv", source = "cv")
     @Mapping(target = "startDate")
     @Mapping(target = "endDate")

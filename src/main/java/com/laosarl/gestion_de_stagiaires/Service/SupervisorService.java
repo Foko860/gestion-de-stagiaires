@@ -38,14 +38,14 @@ import java.util.UUID;
 public class SupervisorService {
 
     private final SupervisorRepository supervisorRepository;
-    private final AuthenticationManager authenticationManager;
+    //private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final TokenRepository tokenSpringRepository;
     private final SupervisorMapper supervisorMapper;
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
 
 
-    public TokenDTO loginUser(AuthRequestDTO authRequestDTO) {
+    /*public TokenDTO loginUser(AuthRequestDTO authRequestDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authRequestDTO.getEmail(),
@@ -63,7 +63,7 @@ public class SupervisorService {
         saveUserToken(supervisor, jwtToken);
 
         return new TokenDTO().value(jwtToken);
-    }
+    }*/
 
     private void revokeAllUserTokens(User user) {
         List<Token> allValidTokensByUser = tokenSpringRepository.findAllValidTokensByUserId(user.getId());
@@ -84,19 +84,18 @@ public class SupervisorService {
     }
 
     public SupervisorIdResponseDTO createSupervisor(SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO) {
-        if (supervisorRepository.existsByEmail((supervisorRegistrationRequestDTO.getEmail()))) {
-            throw new EmailAlreadyUsedException("Email already in use");
-        }
-        Supervisor supervisor = supervisorMapper.toSupervisor(supervisorRegistrationRequestDTO);
-        supervisor.setPassword(passwordEncoder.encode(supervisor.getPassword()));
-        supervisor.setRole(Role.SUPERVISOR);
+        Supervisor supervisor = new Supervisor();
+
+        supervisor.setName(supervisorRegistrationRequestDTO.getName());
+        supervisor.setCompanyRole(supervisorRegistrationRequestDTO.getCompanyRole());
+        supervisor.setRole(Role.SUPERVISOR); // On lui donne le rôle SUPERVISOR
 
         Supervisor saved = supervisorRepository.save(supervisor);
 
-        log.info("Event: new Supervisor created with ID: \n {}", saved.getId());
+        log.info("New Supervisor created with ID: {}", saved.getId());
+
         return new SupervisorIdResponseDTO().value(saved.getId());
     }
-
     @SneakyThrows
     public SupervisorDTO getUserByUsername(String username) {
         Supervisor supervisorNew = getUserByEmail(username);
@@ -132,7 +131,7 @@ public class SupervisorService {
         supervisorRepository.deleteById(id);
     }
 
-    public List<SupervisorDTO> getAllStudents() {
+    public List<SupervisorDTO> getAllSupervisors() {
         return supervisorRepository.findAll().stream()
                 .map(supervisorMapper::toDTO)
                 .toList();

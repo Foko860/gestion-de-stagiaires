@@ -1,12 +1,13 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
-import com.laosarl.gestion_de_stagiaires.domain.user.CurrentUserNotFound;
 import com.laosarl.gestion_de_stagiaires.exceptions.EmailAlreadyUsedException;
 import com.laosarl.gestion_de_stagiaires.exceptions.StudentNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.io.FileNotFoundException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -20,6 +21,13 @@ public class ControllerAdvice {
 
     @ExceptionHandler({StudentNotFoundException.class})
     public ResponseEntity<String> handleStudentNotFoundException(StudentNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({FileNotFoundException.class})
+    public ResponseEntity<String> handleFileNotFoundException(FileNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());

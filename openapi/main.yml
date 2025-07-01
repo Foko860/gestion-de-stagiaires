@@ -33,7 +33,7 @@ paths:
     post:
       tags:
         - Supervisor
-      summary: Create  new supervisor
+      summary: Create a new supervisor
       operationId: createSupervisor
       requestBody:
         description: data needed to create a supervisor

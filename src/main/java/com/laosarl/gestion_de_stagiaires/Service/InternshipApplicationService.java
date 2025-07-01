@@ -100,7 +100,7 @@ public class InternshipApplicationService {
                 internshipApplication.getEmail(),
                 "Candidature Refusée",
                 "Bonjour " + internshipApplication.getFirstName() + ",\n\nNous sommes désolés de vous informer que votre candidature "
-                        + "a été refusée.\nRaison : " + reason + "\n\nCordialement."
+                        + "a été refusée.\nRaison : " + reason.getDescription() + "\n\nCordialement."
         );
     }
 

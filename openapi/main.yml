@@ -163,6 +163,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+        '404':
+          description: No Internship application not found
 
 
 

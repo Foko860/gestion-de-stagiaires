@@ -7,28 +7,21 @@ import com.laosarl.gestion_de_stagiaires.domain.token.TokenType;
 import com.laosarl.gestion_de_stagiaires.domain.user.CurrentUserNotFound;
 import com.laosarl.gestion_de_stagiaires.domain.user.Role;
 import com.laosarl.gestion_de_stagiaires.domain.user.User;
-import com.laosarl.gestion_de_stagiaires.exceptions.EmailAlreadyUsedException;
-import com.laosarl.gestion_de_stagiaires.exceptions.StudentNotFoundException;
+import com.laosarl.gestion_de_stagiaires.exceptions.ResourceNotFoundException;
 import com.laosarl.gestion_de_stagiaires.Service.mapper.SupervisorMapper;
 import com.laosarl.gestion_de_stagiaires.Repository.TokenRepository;
-import com.laosarl.internship_management.model.AuthRequestDTO;
 import com.laosarl.internship_management.model.SupervisorDTO;
 import com.laosarl.internship_management.model.SupervisorIdResponseDTO;
 import com.laosarl.internship_management.model.SupervisorRegistrationRequestDTO;
-import com.laosarl.internship_management.model.TokenDTO;
 import com.laosarl.internship_management.model.UpdateSupervisorDTO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -83,7 +76,9 @@ public class SupervisorService {
         tokenSpringRepository.save(token);
     }
 
-    public SupervisorIdResponseDTO createSupervisor(SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO) {
+    //TODO: add the admin creator in process of supervisor creation
+    public SupervisorIdResponseDTO createSupervisor(SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO,
+                                                    String username) {
         Supervisor supervisor = new Supervisor();
 
         supervisor.setName(supervisorRegistrationRequestDTO.getName());
@@ -140,6 +135,6 @@ public class SupervisorService {
     public SupervisorDTO getSupervisorById(UUID id) {
         return supervisorRepository.findById(id)
                 .map(supervisorMapper::toDTO)
-                .orElseThrow(() -> new StudentNotFoundException("Student with id " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id " + id + " not found"));
    }
 }

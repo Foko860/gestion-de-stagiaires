@@ -1,7 +1,8 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
+import com.laosarl.gestion_de_stagiaires.exceptions.BadRequestException;
 import com.laosarl.gestion_de_stagiaires.exceptions.EmailAlreadyUsedException;
-import com.laosarl.gestion_de_stagiaires.exceptions.StudentNotFoundException;
+import com.laosarl.gestion_de_stagiaires.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,8 +20,8 @@ public class ControllerAdvice {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler({StudentNotFoundException.class})
-    public ResponseEntity<String> handleStudentNotFoundException(StudentNotFoundException exception) {
+    @ExceptionHandler({ResourceNotFoundException.class})
+    public ResponseEntity<String> handleStudentNotFoundException(ResourceNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
@@ -30,6 +31,13 @@ public class ControllerAdvice {
     public ResponseEntity<String> handleFileNotFoundException(FileNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<String> handleBadRequestException(BadRequestException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
 

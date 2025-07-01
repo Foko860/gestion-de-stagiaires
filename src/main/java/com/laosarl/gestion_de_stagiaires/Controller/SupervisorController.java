@@ -1,6 +1,7 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
 import com.laosarl.gestion_de_stagiaires.Service.SupervisorService;
+import com.laosarl.gestion_de_stagiaires.utils.CurrentUser;
 import com.laosarl.internship_management.api.AuthApi;
 import com.laosarl.internship_management.api.SupervisorApi;
 import com.laosarl.internship_management.model.AuthRequestDTO;
@@ -22,18 +23,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public  class SupervisorController implements AuthApi, SupervisorApi {
 
-    private static String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
     private final SupervisorService supervisorService;
 
     @Override
     public ResponseEntity<SupervisorIdResponseDTO> createSupervisor(
-            SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTOO) {
+            SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(supervisorService.createSupervisor(supervisorRegistrationRequestDTOO));
+                .body(supervisorService.createSupervisor(supervisorRegistrationRequestDTO, CurrentUser.getUsername()));
     }
 
     @Override

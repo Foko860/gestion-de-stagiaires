@@ -33,7 +33,7 @@ paths:
     post:
       tags:
         - Supervisor
-      summary: Create  new supervisor
+      summary: Create new supervisor
       operationId: createSupervisor
       requestBody:
         description: data needed to create a supervisor
@@ -125,10 +125,6 @@ paths:
       responses:
         204:
           description: Supervisor deleted
-
-
-
-
   /internship:
     post:
       tags:
@@ -165,9 +161,6 @@ paths:
                   $ref: '#/components/schemas/InternshipApplicationResponseDTO'
         '404':
           description: No Internship application not found
-
-
-
   /internship/{internshipId}:
     get:
       tags:
@@ -220,8 +213,6 @@ paths:
                 $ref: '#/components/schemas/InternshipApplicationResponseDTO'
         '404':
           description: Internship application not found
-
-
     delete:
       tags:
         - InternshipApplication
@@ -240,6 +231,7 @@ paths:
   /internship/{internshipId}/accept:
     post:
       summary: Accepter une candidature
+      operationId: acceptInternship
       tags:
         - InternshipApplication
       parameters:
@@ -253,16 +245,12 @@ paths:
       responses:
         '200':
           description: Candidature acceptée avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
         '404':
           description: Candidature non trouvée
-
   /internship/{internshipId}/reject:
     post:
       summary: Refuser une candidature
+      operationId: rejectInternshipById
       tags:
         - InternshipApplication
       parameters:
@@ -279,27 +267,18 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                reason:
-                  type: string
-                  example: "Le profil ne correspond pas aux critères."
+              $ref: '#/components/schemas/ReasonDTO'
       responses:
         '200':
           description: Candidature refusée avec succès
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
         '404':
           description: Candidature non trouvée
-
   /internship/{internshipId}/assign-supervisor:
     post:
       tags:
         - InternshipApplication
       summary: Assign a supervisor to an accepted internship application
-      operationId: assignSupervisorToInternship
+      operationId: assignSupervisor
       parameters:
         - name: internshipId
           in: path
@@ -486,15 +465,12 @@ components:
         companyRole:
           type: string
           description: Role in the company (e.g., Manager, Tutor)
-
-
     SupervisorIdResponseDTO:
       type: object
       properties:
         value:
           type: string
           format: uuid
-
     InternshipApplicationRequestDTO:
       type: object
       required:
@@ -503,7 +479,7 @@ components:
           - studyLevel
           - speciality
           - university
-          - cv
+          - documentId
           - startDate
           - endDate
           - phoneNumber
@@ -521,7 +497,7 @@ components:
             type: string
           email:
             type: string
-          cv:
+          documentId:
             type: string
             format: uuid
             description: Path or identifier of the CV file
@@ -533,7 +509,6 @@ components:
             format: date
           phoneNumber:
               $ref: '#/components/schemas/PhoneNumberDTO'
-
     InternshipApplicationResponseDTO:
       type: object
       properties:
@@ -563,7 +538,7 @@ components:
           format: date
         status:
           type: string
-          enum: [ DRAFT, PUBLISHED, IN_PROGRESS, ACCEPTED, REJECTED ]
+          enum: [ PUBLISHED, ACCEPTED, REJECTED, ASSIGN ]
         submissionDate:
           type: string
           format: date
@@ -606,3 +581,10 @@ components:
         id:
           type: string
           format: uuid
+    ReasonDTO:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string

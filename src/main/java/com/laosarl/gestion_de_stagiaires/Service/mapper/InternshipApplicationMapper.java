@@ -26,7 +26,7 @@ public interface InternshipApplicationMapper {
     @Mapping(target = "email", source = "email")
     @Mapping(target = "startDate", source = "startDate")
     @Mapping(target = "endDate", source = "endDate")
-    @Mapping(target = "cv", source = "cv", qualifiedByName = "mapUuidToDocument")
+    @Mapping(target = "cv", source = "documentId", qualifiedByName = "mapUuidToDocument")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberDTOToPhoneNumber")
     InternshipApplication toEntity(
             InternshipApplicationRequestDTO internshipApplicationRequestDTO,

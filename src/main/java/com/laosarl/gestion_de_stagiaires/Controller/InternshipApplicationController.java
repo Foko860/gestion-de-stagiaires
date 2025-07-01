@@ -1,6 +1,7 @@
 package com.laosarl.gestion_de_stagiaires.Controller;
 
 import com.laosarl.gestion_de_stagiaires.Service.InternshipApplicationService;
+import com.laosarl.gestion_de_stagiaires.utils.CurrentUser;
 import com.laosarl.internship_management.api.InternshipApplicationApi;
 import com.laosarl.internship_management.model.*;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,16 @@ public class InternshipApplicationController implements InternshipApplicationApi
 
 
     @Override
-    public ResponseEntity<Void> assignSupervisorToInternship(UUID internshipId, AssignSupervisorRequestDTO assignSupervisorRequestDTO) {
-        internshipApplicationService.assignSupervisor(internshipId, assignSupervisorRequestDTO.getId());
-        return ResponseEntity
-                .noContent()
-                .build();
+    public ResponseEntity<Void> acceptInternship(UUID internshipId) {
+
+        internshipApplicationService.acceptInternship(internshipId, CurrentUser.getUsername());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> assignSupervisor(UUID internshipId, AssignSupervisorRequestDTO assignSupervisorRequestDTO) {
+        internshipApplicationService.assignSupervisor(internshipId, assignSupervisorRequestDTO.getId(), CurrentUser.getUsername());
+        return ResponseEntity.noContent().build();
     }
 
     @Override
@@ -50,26 +56,6 @@ public class InternshipApplicationController implements InternshipApplicationApi
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> internshipInternshipIdAcceptPost(UUID internshipId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(internshipApplicationService.accept(internshipId));
-
-    }
-
-    @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> internshipInternshipIdRejectPost(UUID internshipId, InternshipInternshipIdRejectPostRequest internshipInternshipIdRejectPostRequest) {
-        return  ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        internshipApplicationService.reject(
-                                internshipId,
-                                internshipInternshipIdRejectPostRequest != null ? internshipInternshipIdRejectPostRequest.getReason() : null
-                        ));
-    }
-
-
-    @Override
     public ResponseEntity<Void> deleteInternshipApplication(UUID internshipId) {
         internshipApplicationService.delete(internshipId);
         return ResponseEntity
@@ -82,5 +68,11 @@ public class InternshipApplicationController implements InternshipApplicationApi
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(internshipApplicationService.patch(internshipId, updateInternshipApplicationDTO));
+    }
+
+    @Override
+    public ResponseEntity<Void> rejectInternshipById(UUID internshipId, ReasonDTO reasonDTO) {
+        internshipApplicationService.rejectInternship(internshipId, reasonDTO, CurrentUser.getUsername());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

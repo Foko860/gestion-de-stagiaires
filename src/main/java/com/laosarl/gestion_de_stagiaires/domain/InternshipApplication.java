@@ -1,8 +1,10 @@
 package com.laosarl.gestion_de_stagiaires.domain;
 
+import com.laosarl.gestion_de_stagiaires.domain.admin.Admin;
 import com.laosarl.gestion_de_stagiaires.domain.document.Document;
 import com.laosarl.gestion_de_stagiaires.domain.supervisor.Supervisor;
 import com.laosarl.gestion_de_stagiaires.domain.user.PhoneNumber;
+import com.laosarl.gestion_de_stagiaires.exceptions.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -75,4 +77,37 @@ public class InternshipApplication {
     @JoinColumn(name = "supervisor_id")
     private Supervisor supervisor;
 
+    @ManyToOne
+    @JoinColumn(name = "accepted_by")
+    private Admin acceptedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "rejected_by")
+    private Admin rejectedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "rejected_by")
+    private Admin assignedBy;
+
+    private String reason;
+
+    public void markHasAccept(Admin admin) {
+        this.status = InternshipApplicationStatus.ACCEPTED;
+        this.acceptedBy = admin;
+    }
+
+    public void markHasRejected(Admin admin, String reason) {
+        this.status = InternshipApplicationStatus.REJECTED;
+        this.reason = reason;
+        this.rejectedBy = admin;
+    }
+
+    public void assignSupervisor(Supervisor supervisor, Admin admin) {
+        if (!InternshipApplicationStatus.ACCEPTED.equals(this.status)) {
+            throw new BadRequestException("Cannot assign supervisor. Internship is not accepted.");
+        }
+        this.supervisor = supervisor;
+        this.status = InternshipApplicationStatus.ASSIGN;
+        this.assignedBy = admin;
+    }
 }

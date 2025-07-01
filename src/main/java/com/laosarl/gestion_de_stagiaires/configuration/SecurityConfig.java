@@ -1,10 +1,8 @@
-
 package com.laosarl.gestion_de_stagiaires.configuration;
 
-import com.laosarl.gestion_de_stagiaires.Service.AdminService;
-import com.laosarl.gestion_de_stagiaires.configuration.filter.JwtAuthenticationFilter;
 import com.laosarl.gestion_de_stagiaires.Service.LogoutService;
-import  com.laosarl.gestion_de_stagiaires.domain.user.Role;
+import com.laosarl.gestion_de_stagiaires.configuration.filter.JwtAuthenticationFilter;
+import com.laosarl.gestion_de_stagiaires.domain.user.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,11 +23,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfigAdmin {
+public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutService logoutService;
-    private final AdminService adminService;
 
     @Bean
     @Order(0)
@@ -38,7 +35,6 @@ public class SecurityConfigAdmin {
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .build();
     }
-
 
 
     @ConditionalOnProperty(
@@ -54,34 +50,34 @@ public class SecurityConfigAdmin {
                                 requestMatcherConfigurer
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
                                         .requestMatchers(HttpMethod.POST, "/register/supervisor")
-                                        .requestMatchers(HttpMethod.POST,"/internship")
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/accept")
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/reject")
-                                        .requestMatchers(HttpMethod.GET,"/internship")
-                                        .requestMatchers(HttpMethod.PATCH,"/internship")
-                                        .requestMatchers(HttpMethod.PATCH,"/internship/{id}")
-                                        .requestMatchers(HttpMethod.GET,"/internship/{id}")
+                                        .requestMatchers(HttpMethod.POST, "/internship")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/accept")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/reject")
+                                        .requestMatchers(HttpMethod.GET, "/internship")
+                                        .requestMatchers(HttpMethod.PATCH, "/internship")
+                                        .requestMatchers(HttpMethod.PATCH, "/internship/{id}")
+                                        .requestMatchers(HttpMethod.GET, "/internship/{id}")
                                         .requestMatchers(HttpMethod.GET, "/supervisors")
                                         .requestMatchers(HttpMethod.GET, "/supervisors/{id}")
-                                        .requestMatchers(HttpMethod.POST,"/documents/upload")
+                                        .requestMatchers(HttpMethod.POST, "/documents/upload")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.GET,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.GET,"/internship/{id}").permitAll()
-                                        .requestMatchers(HttpMethod.DELETE,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH,"/internship").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH,"/internship/{id}").permitAll()
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/accept").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST,"/internship/{id}/reject").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole(Role.ADMIN.name())
+                                        .requestMatchers(HttpMethod.POST, "/internship").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/internship").hasRole(Role.ADMIN.name())
+                                        .requestMatchers(HttpMethod.GET, "/internship/{id}").hasRole(Role.ADMIN.name())
+                                        .requestMatchers(HttpMethod.DELETE, "/internship").permitAll()
+                                        .requestMatchers(HttpMethod.PATCH, "/internship").permitAll()
+                                        .requestMatchers(HttpMethod.PATCH, "/internship/{id}").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/accept").hasRole(Role.ADMIN.name())
+                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/reject").hasRole(Role.ADMIN.name())
                                         .requestMatchers(HttpMethod.GET, "/supervisors").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/supervisors/{id}").permitAll()
-                                        .requestMatchers(HttpMethod.POST,"/documents/upload").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
                 )
                 .build();
     }

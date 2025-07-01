@@ -320,7 +320,7 @@ paths:
                   description: PDF file to upload
       responses:
         201:
-          description: Document uploaded successfully
+          description: Document upload successfully
           content:
             application/json:
               schema:

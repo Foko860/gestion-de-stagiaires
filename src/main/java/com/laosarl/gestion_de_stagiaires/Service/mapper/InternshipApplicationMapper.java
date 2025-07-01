@@ -26,7 +26,7 @@ public interface InternshipApplicationMapper {
     @Mapping(target = "email", source = "email")
     @Mapping(target = "startDate", source = "startDate")
     @Mapping(target = "endDate", source = "endDate")
-    @Mapping(target = "cv", source = "documentId", qualifiedByName = "mapUuidToDocument")
+    @Mapping(target = "documentId", source = "documentId", qualifiedByName = "mapUuidToDocument")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberDTOToPhoneNumber")
     InternshipApplication toEntity(
             InternshipApplicationRequestDTO internshipApplicationRequestDTO,
@@ -46,14 +46,14 @@ public interface InternshipApplicationMapper {
     @Mapping(target = "endDate", source = "endDate")
     @Mapping(target = "submissionDate", source = "submissionDate")
     @Mapping(target = "status", source = "status")
-    @Mapping(target = "cv", source = "cv", qualifiedByName = "mapDocumentToUuid")
+    @Mapping(target = "documentId", source = "documentId", qualifiedByName = "mapDocumentToUuid")
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberToPhoneNumberDTO")
     InternshipApplicationResponseDTO toResponseDTO(InternshipApplication entity);
 
     // ===== Partial Update DTO -> Entity =====
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "mapPhoneNumberDTOToPhoneNumber")
-    @Mapping(target = "cv", source = "cv", qualifiedByName = "mapUuidToDocument")
+    @Mapping(target = "documentId", source = "documentId", qualifiedByName = "mapUuidToDocument")
     void updateFromDTO(
             UpdateInternshipApplicationDTO dto,
             @MappingTarget InternshipApplication entity,

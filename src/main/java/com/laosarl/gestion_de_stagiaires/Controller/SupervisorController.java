@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-public  class SupervisorController implements AuthApi, SupervisorApi {
+public  class SupervisorController implements  SupervisorApi {
 
     private final SupervisorService supervisorService;
 
@@ -63,11 +63,6 @@ public  class SupervisorController implements AuthApi, SupervisorApi {
                 .body(supervisorService.getSupervisorById(id));
     }
 
-    @Override
-    public ResponseEntity<TokenDTO> loginUser(AuthRequestDTO authRequestDTO) {
-        return null;
-        /*ResponseEntity.ok(supervisorService.loginUser(authRequestDTO));*/
-    }
 
     @Override
     public ResponseEntity<Void> updateSupervisor(UUID id, UpdateSupervisorDTO updateSupervisorDTO) {

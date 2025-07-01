@@ -55,7 +55,7 @@ public class InternshipApplication {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "curriculum_vitae", nullable = false)
-    private Document cv;
+    private Document documentId;
 
     @Column(name = "email")
     private String email;
@@ -86,7 +86,7 @@ public class InternshipApplication {
     private Admin rejectedBy;
 
     @ManyToOne
-    @JoinColumn(name = "rejected_by")
+    @JoinColumn(name = "assigned_by")
     private Admin assignedBy;
 
     private String reason;

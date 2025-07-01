@@ -527,7 +527,7 @@ components:
           type: string
         university:
           type: string
-        cv:
+        documentId:
           type: string
           format: uuid
         startDate:
@@ -562,7 +562,7 @@ components:
           type: string
         university:
           type: string
-        cv:
+        documentId:
           type: string
           format: uuid
         startDate:

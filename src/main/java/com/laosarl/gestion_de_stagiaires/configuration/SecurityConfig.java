@@ -50,34 +50,47 @@ public class SecurityConfig {
                                 requestMatcherConfigurer
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
                                         .requestMatchers(HttpMethod.POST, "/register/supervisor")
-                                        .requestMatchers(HttpMethod.POST, "/internship")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/accept")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/reject")
-                                        .requestMatchers(HttpMethod.GET, "/internship")
-                                        .requestMatchers(HttpMethod.PATCH, "/internship")
-                                        .requestMatchers(HttpMethod.PATCH, "/internship/{id}")
-                                        .requestMatchers(HttpMethod.GET, "/internship/{id}")
                                         .requestMatchers(HttpMethod.GET, "/supervisors")
                                         .requestMatchers(HttpMethod.GET, "/supervisors/{id}")
+                                        .requestMatchers(HttpMethod.PUT, "/supervisors/{id}")
+                                        .requestMatchers(HttpMethod.DELETE, "/supervisors/{id}")
+
+                                        .requestMatchers(HttpMethod.POST, "/internship")
+                                        .requestMatchers(HttpMethod.GET, "/internship")
+                                        .requestMatchers(HttpMethod.GET, "/internship/{internshipId}")
+                                        .requestMatchers(HttpMethod.PATCH, "/internship/{internshipId}")
+                                        .requestMatchers(HttpMethod.DELETE, "/internship/{internshipId}")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/accept")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/reject")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/assign-supervisor")
+
                                         .requestMatchers(HttpMethod.POST, "/documents/upload")
+                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole(Role.ADMIN.name())
+                                        .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/supervisors").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/supervisors/{id}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT, "/supervisors/{id}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE, "/supervisors/{id}").hasRole("ADMIN")
+
                                         .requestMatchers(HttpMethod.POST, "/internship").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/internship").hasRole(Role.ADMIN.name())
-                                        .requestMatchers(HttpMethod.GET, "/internship/{id}").hasRole(Role.ADMIN.name())
-                                        .requestMatchers(HttpMethod.DELETE, "/internship").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH, "/internship").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH, "/internship/{id}").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/accept").hasRole(Role.ADMIN.name())
-                                        .requestMatchers(HttpMethod.POST, "/internship/{id}/reject").hasRole(Role.ADMIN.name())
-                                        .requestMatchers(HttpMethod.GET, "/supervisors").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/supervisors/{id}").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/internship").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/internship/{internshipId}").permitAll()
+                                        .requestMatchers(HttpMethod.PATCH, "/internship/{internshipId}").permitAll()
+                                        .requestMatchers(HttpMethod.DELETE, "/internship/{internshipId}").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/accept").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/reject").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/assign-supervisor").hasRole("ADMIN")
+
+
                                         .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}").hasRole("ADMIN")
+
                 )
                 .build();
     }

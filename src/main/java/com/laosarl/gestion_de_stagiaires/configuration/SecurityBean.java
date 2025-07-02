@@ -1,7 +1,6 @@
 package com.laosarl.gestion_de_stagiaires.configuration;
 
 import com.laosarl.gestion_de_stagiaires.Repository.AdminRepository;
-import com.laosarl.gestion_de_stagiaires.Repository.SupervisorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -60,8 +60,8 @@ public class AdminService implements UserDetailsService {
     @PostConstruct
     public void initDefaultAdmins() {
         if (adminRepository.count() == 0) {
-            createAdmin("Super Admin", "admin1@example.com", "password1");
-            createAdmin("Second Admin", "admin2@example.com", "password2");
+            createAdmin("Mr Kenneth FABO", "adminkenneth@gmail.com", "password1");
+            createAdmin("Mr Rodrigue LAGOUE", "adminrodrigue@gmail.com", "password2");
             System.out.println("✅ Deux admins ont été créés au démarrage.");
         }
     }

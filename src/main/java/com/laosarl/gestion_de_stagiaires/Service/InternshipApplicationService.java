@@ -79,8 +79,8 @@ public class InternshipApplicationService {
         mailService.sendEmail(
                 internshipApplication.getEmail(),
                 "Candidature Acceptée",
-                "Bonjour " + internshipApplication.getFirstName() + ",\n\nVotre candidature a été acceptée. "
-                        + "Nous vous attendons le " + internshipApplication.getStartDate() + " pour débuter votre stage.\nFélicitations !"
+                "Bonjour " + internshipApplication.getFirstName() + internshipApplication.getLastName() + ",\n\nVotre candidature a été acceptée. "
+                        + "Nous vous attendons le " + internshipApplication.getStartDate() + " pour débuter votre stage.\nFélicitations et Bienvenue à LAO SARL !"
         );
     }
 
@@ -99,7 +99,7 @@ public class InternshipApplicationService {
         mailService.sendEmail(
                 internshipApplication.getEmail(),
                 "Candidature Refusée",
-                "Bonjour " + internshipApplication.getFirstName() + ",\n\nNous sommes désolés de vous informer que votre candidature "
+                "Bonjour " + internshipApplication.getFirstName() + internshipApplication.getLastName() + ",\n\nNous sommes désolés de vous informer que votre candidature "
                         + "a été refusée.\nRaison : " + reason.getDescription() + "\n\nCordialement."
         );
     }

@@ -77,29 +77,29 @@ public class InternshipApplication {
     @JoinColumn(name = "supervisor_id")
     private Supervisor supervisor;
 
-    @ManyToOne
-    @JoinColumn(name = "accepted_by")
-    private Admin acceptedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "rejected_by")
-    private Admin rejectedBy;
+    @Column(name = "accepted_by")
+    private String acceptedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "assigned_by")
-    private Admin assignedBy;
+
+    @Column(name = "rejected_by")
+    private String rejectedBy;
+
+
+    @Column(name = "assigned_by")
+    private String assignedBy;
 
     private String reason;
 
     public void markHasAccept(Admin admin) {
         this.status = InternshipApplicationStatus.ACCEPTED;
-        this.acceptedBy = admin;
+        this.acceptedBy = admin.getUsername();
     }
 
     public void markHasRejected(Admin admin, String reason) {
         this.status = InternshipApplicationStatus.REJECTED;
         this.reason = reason;
-        this.rejectedBy = admin;
+        this.rejectedBy = admin.getUsername();
     }
 
     public void assignSupervisor(Supervisor supervisor, Admin admin) {
@@ -108,6 +108,6 @@ public class InternshipApplication {
         }
         this.supervisor = supervisor;
         this.status = InternshipApplicationStatus.ASSIGN;
-        this.assignedBy = admin;
+        this.assignedBy = admin.getUsername();
     }
 }

@@ -240,6 +240,10 @@
 					</from>
 					<to>
 						<image>aurellefoko/gestion_stagiaire:${project.version}</image>
+						<auth>
+							<username>aurellefoko</username>
+							<password>Lydienne@99aurelle</password>
+						</auth>
 						<tags>
 							<tag>${project.version}</tag>
 							<tag>latest</tag>

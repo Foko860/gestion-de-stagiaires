@@ -3,14 +3,14 @@ spring:
     name: gestion-de-stagiares
 
   datasource:
-    url: "jdbc:postgresql://localhost:5435/gestion-de-stage"
-    username: "root"
-    password: "F@KO1ALK"
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: "org.postgresql.Driver"
 
   jpa:
     hibernate:
-      ddl-auto: "update"
+      ddl-auto: ${DB_DDL_AUTO:update}
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.PostgreSQLDialect"

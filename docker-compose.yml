@@ -3,26 +3,36 @@ version: '3.9'
 services:
   postgres-db:
     image: postgres:15
-    container_name: stage_postgres
     environment:
-      POSTGRES_DB: gestion-de-stage
+      POSTGRES_DB: gestion_de_stage
       POSTGRES_USER: root
       POSTGRES_PASSWORD: F@KO1ALK
     ports:
       - "5435:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "root"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U root -d gestion_de_stage"]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+
+  backend:
+    image: aurellefoko/gestion_stagiaire:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/gestion_de_stage
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: F@KO1ALK
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+    ports:
+      - "8185:8185"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    restart: on-failure
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: stage-pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@stage.com
       PGADMIN_DEFAULT_PASSWORD: admin123
@@ -31,35 +41,7 @@ services:
     depends_on:
       postgres-db:
         condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    image: aurellefoko/gestion_stagiaire:latest  # Remplace par ton image Docker
-    container_name: nifty_easley
-    environment:
-      DB_URL: jdbc:postgresql://postgres-db:5432/gestion-de-stage
-      DB_USERNAME: root
-      DB_PASSWORD: F@KO1ALK
-      DB_DDL_AUTO: update
-      SPRING_MAIL_USERNAME: aurellefoko117@gmail.com
-      SPRING_MAIL_PASSWORD: xxlnsgbsczepphbe
-    ports:
-      - "8185:8185"
-    depends_on:
-      postgres-db:
-        condition: service_healthy
-    networks:
-      - app-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
-
-networks:
-  app-network:
-    driver: bridge

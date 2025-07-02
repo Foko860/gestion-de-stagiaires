@@ -1,21 +1,22 @@
-
+version: '3.9'
 
 services:
-  postgres:
-    image: postgres:latest
+  postgres-db:
+    image: postgres:15
     container_name: stage_postgres
     environment:
+      POSTGRES_DB: gestion-de-stage
       POSTGRES_USER: root
       POSTGRES_PASSWORD: F@KO1ALK
-      POSTGRES_DB: gestion-de-stage
     ports:
-      - "5435:5432"  # Port 5434 sur votre machine → 5432 dans le container
+      - "5435:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    networks:
+      - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U root -d gestion-de-stage"]
-      interval: 5s
+      test: ["CMD", "pg_isready", "-U", "root"]
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -26,11 +27,39 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@stage.com
       PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
-      - "5050:80"  # pgAdmin accessible sur http://localhost:5050
+      - "5050:80"
     depends_on:
-      postgres:
+      postgres-db:
         condition: service_healthy
-    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: aurellefoko/gestion_stagiaire:latest  # Remplace par ton image Docker
+    container_name: nifty_easley
+    environment:
+      DB_URL: jdbc:postgresql://postgres-db:5432/gestion-de-stage
+      DB_USERNAME: root
+      DB_PASSWORD: F@KO1ALK
+      DB_DDL_AUTO: update
+      SPRING_MAIL_USERNAME: aurellefoko117@gmail.com
+      SPRING_MAIL_PASSWORD: xxlnsgbsczepphbe
+    ports:
+      - "8185:8185"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -50,14 +50,6 @@ public class SecurityConfig {
                                 requestMatcherConfigurer
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
                                         .requestMatchers(HttpMethod.POST, "/internship")
-                                        .requestMatchers(HttpMethod.GET, "/internship")
-                                        .requestMatchers(HttpMethod.GET, "/internship/{internshipId}")
-                                        .requestMatchers(HttpMethod.PATCH, "/internship/{internshipId}")
-                                        .requestMatchers(HttpMethod.DELETE, "/internship/{internshipId}")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/accept")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/reject")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/assign-supervisor")
-
                                         .requestMatchers(HttpMethod.POST, "/documents/upload")
                                         .requestMatchers(HttpMethod.GET, "/documents/download/{id}")
                 )
@@ -67,16 +59,8 @@ public class SecurityConfig {
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                         .requestMatchers(HttpMethod.POST, "/internship").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/internship").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.GET, "/internship/{internshipId}").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH, "/internship/{internshipId}").permitAll()
-                                        .requestMatchers(HttpMethod.DELETE, "/internship/{internshipId}").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/accept").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/reject").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/assign-supervisor").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}").hasRole("ADMIN")
-
+                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}").permitAll()
                 )
                 .build();
     }

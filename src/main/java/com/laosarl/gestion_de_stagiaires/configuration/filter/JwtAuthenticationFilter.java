@@ -1,6 +1,5 @@
 package com.laosarl.gestion_de_stagiaires.configuration.filter;
 
-import com.laosarl.gestion_de_stagiaires.Repository.TokenRepository;
 import com.laosarl.gestion_de_stagiaires.Service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +24,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenSpringRepository;
 
     @Override
     protected void doFilterInternal(

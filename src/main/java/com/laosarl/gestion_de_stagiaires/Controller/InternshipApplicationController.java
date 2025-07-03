@@ -33,41 +33,24 @@ public class InternshipApplicationController implements InternshipApplicationApi
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> createInternshipApplication(InternshipApplicationRequestDTO internshipApplicationRequestDTO) {
+    public ResponseEntity<InternshipApplicationIdDTO> createInternshipApplication(InternshipApplicationRequestDTO internshipApplicationRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(internshipApplicationService.create(internshipApplicationRequestDTO));
     }
 
-
-
     @Override
-    public ResponseEntity<List<InternshipApplicationResponseDTO>> getAllInternshipApplications() {
+    public ResponseEntity<List<InternshipApplicationDTO>> getAllInternshipApplications() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(internshipApplicationService.getAll());
     }
 
     @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> getInternshipApplicationById(UUID internshipId) {
+    public ResponseEntity<InternshipApplicationDTO> getInternshipApplicationById(UUID internshipId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(internshipApplicationService.getById(internshipId));
-    }
-
-    @Override
-    public ResponseEntity<Void> deleteInternshipApplication(UUID internshipId) {
-        internshipApplicationService.delete(internshipId);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
-    @Override
-    public ResponseEntity<InternshipApplicationResponseDTO> patchInternshipApplication(UUID internshipId, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(internshipApplicationService.patch(internshipId, updateInternshipApplicationDTO));
     }
 
     @Override

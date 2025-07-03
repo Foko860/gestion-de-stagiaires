@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -53,9 +54,8 @@ public class InternshipApplication {
     @Column(name = "university")
     private String university;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "curriculum_vitae", nullable = false)
-    private Document documentId;
+    @Column(name = "document_id")
+    private UUID documentId;
 
     @Column(name = "email")
     private String email;
@@ -71,7 +71,8 @@ public class InternshipApplication {
     @Enumerated(EnumType.STRING)
     private InternshipApplicationStatus status;
 
-    private LocalDate submissionDate;
+    @Builder.Default
+    private LocalDateTime submissionDate = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
@@ -109,5 +110,9 @@ public class InternshipApplication {
         this.supervisor = supervisor;
         this.status = InternshipApplicationStatus.ASSIGN;
         this.assignedBy = admin.getUsername();
+    }
+
+    public void markHasPushed() {
+        this.status = InternshipApplicationStatus.PUBLISHED;
     }
 }

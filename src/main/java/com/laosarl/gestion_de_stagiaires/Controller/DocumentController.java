@@ -17,11 +17,11 @@ public class DocumentController implements DocumentsApi {
 
     @Override
     public ResponseEntity<Resource> downloadPdfDocument(String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(documentService.downloadPdfDocument(id));
+        return ResponseEntity.status(HttpStatus.OK).body(documentService.downloadDocument(id));
     }
 
     @Override
-    public ResponseEntity<CreatedDocumentIdDTO> uploadPdfDocument(MultipartFile file) {
+    public ResponseEntity<CreatedDocumentIdDTO> uploadDocument(MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED).body(documentService.createDocument(file));
     }
 }

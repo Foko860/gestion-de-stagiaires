@@ -6,12 +6,12 @@ import com.laosarl.gestion_de_stagiaires.Repository.InternshipApplicationReposit
 import com.laosarl.gestion_de_stagiaires.Repository.SupervisorRepository;
 import com.laosarl.gestion_de_stagiaires.Service.mapper.InternshipApplicationMapper;
 import com.laosarl.gestion_de_stagiaires.domain.InternshipApplication;
-import com.laosarl.gestion_de_stagiaires.domain.InternshipApplicationStatus;
 import com.laosarl.gestion_de_stagiaires.domain.admin.Admin;
 import com.laosarl.gestion_de_stagiaires.domain.supervisor.Supervisor;
 import com.laosarl.gestion_de_stagiaires.exceptions.ResourceNotFoundException;
+import com.laosarl.internship_management.model.InternshipApplicationDTO;
+import com.laosarl.internship_management.model.InternshipApplicationIdDTO;
 import com.laosarl.internship_management.model.InternshipApplicationRequestDTO;
-import com.laosarl.internship_management.model.InternshipApplicationResponseDTO;
 import com.laosarl.internship_management.model.ReasonDTO;
 import com.laosarl.internship_management.model.UpdateInternshipApplicationDTO;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,16 +35,20 @@ public class InternshipApplicationService {
 
     // ✅ Création d'une candidature
     @Transactional
-    public InternshipApplicationResponseDTO create(InternshipApplicationRequestDTO internshipApplicationRequestDTO) {
-        InternshipApplication entity = internshipApplicationMapper.toEntity(internshipApplicationRequestDTO, documentRepository);
-        entity.setSubmissionDate(LocalDate.now());
-        entity.setStatus(InternshipApplicationStatus.PUBLISHED);
-        return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(entity));
+    public InternshipApplicationIdDTO create(InternshipApplicationRequestDTO dto) {
+        if (!documentRepository.existsById(dto.getDocumentId())) {
+            throw new ResourceNotFoundException("Document not found");
+        }
+        InternshipApplication entity = internshipApplicationMapper.toEntity(dto);
+        entity.markHasPushed();
+
+        InternshipApplication saved = internshipApplicationRepository.save(entity);
+        return new InternshipApplicationIdDTO().value(saved.getInternshipId());
     }
 
     // ✅ Récupérer toutes les candidatures
     @Transactional(readOnly = true)
-    public List<InternshipApplicationResponseDTO> getAll() {
+    public List<InternshipApplicationDTO> getAll() {
         return internshipApplicationRepository.findAll().stream()
                 .map(internshipApplicationMapper::toResponseDTO)
                 .toList();
@@ -53,7 +56,7 @@ public class InternshipApplicationService {
 
     // ✅ Récupérer une candidature par ID
     @Transactional(readOnly = true)
-    public InternshipApplicationResponseDTO getById(UUID internshipId) {
+    public InternshipApplicationDTO getById(UUID internshipId) {
         return internshipApplicationRepository.findById(internshipId)
                 .map(internshipApplicationMapper::toResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Internship Application Not found"));
@@ -104,15 +107,14 @@ public class InternshipApplicationService {
         );
     }
 
-    // ✅ Mise à jour partielle (PATCH)
+    // ✅ Mise à jour
     @Transactional
-    public InternshipApplicationResponseDTO patch(UUID internshipId, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
+    public void updateInternshipApplication(UUID internshipId, UpdateInternshipApplicationDTO updateInternshipApplicationDTO) {
         InternshipApplication internshipApplication = internshipApplicationRepository.findById(internshipId)
-                .orElseThrow(() -> new IllegalArgumentException("Application not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("InternshipApplication not found"));
 
-        internshipApplicationMapper.updateFromDTO(updateInternshipApplicationDTO, internshipApplication, documentRepository);
-
-        return internshipApplicationMapper.toResponseDTO(internshipApplicationRepository.save(internshipApplication));
+        internshipApplicationMapper.updateFromDTO(updateInternshipApplicationDTO, internshipApplication);
+        internshipApplicationRepository.save(internshipApplication);
     }
 
     // ✅ Assignation d'un encadreur

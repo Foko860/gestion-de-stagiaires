@@ -21,13 +21,12 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class SupervisorService {
 
     private final SupervisorRepository supervisorRepository;
     private final SupervisorMapper supervisorMapper;
 
-    //TODO: add the admin creator in process of supervisor creation
+    @Transactional
     public SupervisorIdResponseDTO createSupervisor(SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO,
                                                     String username) {
 
@@ -40,6 +39,7 @@ public class SupervisorService {
     }
 
 
+    @Transactional
     public void updateSupervisor(UUID id, UpdateSupervisorDTO updateSupervisorDTO) {
         Supervisor supervisor = supervisorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Supervisor not found with id: " + id));

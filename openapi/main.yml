@@ -142,8 +142,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
-
+                $ref: '#/components/schemas/InternshipApplicationIdDTO'
     get:
       tags:
         - InternshipApplication
@@ -157,7 +156,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+                  $ref: '#/components/schemas/InternshipApplicationDTO'
         '404':
           description: No Internship application not found
   /internship/{internshipId}:
@@ -179,54 +178,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
+                $ref: '#/components/schemas/InternshipApplicationDTO'
         '404':
           description: Internship application not found
-    patch:
-      tags:
-        - InternshipApplication
-      summary: Partially update an internship application
-      description: Update one or more fields of an internship application
-      operationId: patchInternshipApplication
-      parameters:
-        - name: internshipId
-          in: path
-          required: true
-          description: UUID of the internship application
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        description: Fields to update in the internship application
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateInternshipApplicationDTO'
-      responses:
-        '200':
-          description: Updated internship application
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InternshipApplicationResponseDTO'
-        '404':
-          description: Internship application not found
-    delete:
-      tags:
-        - InternshipApplication
-      summary: Delete internship application by ID
-      operationId: deleteInternshipApplication
-      parameters:
-        - name: internshipId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: Internship application deleted
   /internship/{internshipId}/accept:
     post:
       summary: Accepter une candidature
@@ -302,24 +256,26 @@ paths:
     post:
       tags:
         - Documents
-      summary: Upload a PDF document
-      description: Upload a single PDF document to the server as multipart/form-data
-      operationId: uploadPdfDocument
+      summary: Upload a document
+      description: Upload a single document (PDF, Word, Excel...) as multipart/form-data
+      operationId: uploadDocument
       requestBody:
-        description: PDF file to upload
+        description: Document file to upload
         required: true
         content:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - file
               properties:
                 file:
                   type: string
                   format: binary
-                  description: PDF file to upload
+                  description: Document file to upload
       responses:
         201:
-          description: Document upload successfully
+          description: Document uploaded successfully
           content:
             application/json:
               schema:
@@ -508,7 +464,13 @@ components:
             format: date
           phoneNumber:
               $ref: '#/components/schemas/PhoneNumberDTO'
-    InternshipApplicationResponseDTO:
+    InternshipApplicationIdDTO:
+      type: object
+      properties:
+        value:
+          type: string
+          format: uuid
+    InternshipApplicationDTO:
       type: object
       properties:
         internshipId:
@@ -543,8 +505,6 @@ components:
           format: date
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumberDTO'
-
-
     UpdateInternshipApplicationDTO:
       type: object
       description: Fields to update in an internship application

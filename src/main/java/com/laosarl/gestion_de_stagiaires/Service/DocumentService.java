@@ -18,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,22 +29,34 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
 
-    @Transactional
     public CreatedDocumentIdDTO createDocument(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Fichier vide");
+        }
+
         try {
+            String originalFilename = Optional.ofNullable(file.getOriginalFilename())
+                    .filter(name -> !name.trim().isEmpty())
+                    .orElse("document_" + System.currentTimeMillis());
+
             Document document = Document.builder()
-                    .originalFilename("")
+                    .originalFilename(originalFilename)
                     .fileSize(file.getSize())
                     .contentType(file.getContentType())
                     .build();
 
             Document savedDocument = documentRepository.save(document);
 
-            if (!Files.exists(STORAGE_DIR)) {
-                Files.createDirectories(STORAGE_DIR);
+            Path storageDir = Paths.get("storage", "documents");
+
+            if (!Files.exists(storageDir)) {
+                Files.createDirectories(storageDir);
             }
 
-            Path targetPath = STORAGE_DIR.resolve(savedDocument.getId() + ".pdf");
+            String fileExtension = getFileExtension(originalFilename, file.getContentType());
+
+            Path targetPath = storageDir.resolve(savedDocument.getId().toString() + fileExtension);
+
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
             }
@@ -50,23 +64,53 @@ public class DocumentService {
             return new CreatedDocumentIdDTO().id(savedDocument.getId());
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store document", e);
+            throw new RuntimeException("Erreur lors du stockage du fichier : " + e.getMessage(), e);
         }
     }
 
-    @Transactional(readOnly = true)
-    public Resource downloadPdfDocument(String id) {
-        try {
-            Path filePath = STORAGE_DIR.resolve(id + ".pdf");
 
-            if (!Files.exists(filePath)) {
-                throw new FileNotFoundException("Document with ID " + id + " not found.");
+    private String getFileExtension(String originalFilename, String contentType) {
+        if (originalFilename != null && originalFilename.contains(".")) {
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            if (extension.length() > 1) {
+                return extension;
+            }
+        }
+        if (contentType != null) {
+            return switch (contentType.toLowerCase()) {
+                case "application/pdf" -> ".pdf";
+                case "text/plain" -> ".txt";
+                case "application/msword" -> ".doc";
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> ".docx";
+                default -> ".bin";
+            };
+        }
+        return ".bin";
+    }
+
+    @Transactional(readOnly = true)
+    public Resource downloadDocument(String id) {
+        try {
+            Path storageDir = Paths.get("storage", "documents");
+
+            if (!Files.exists(storageDir)) {
+                throw new FileNotFoundException("Répertoire de stockage inexistant.");
             }
 
-            return new UrlResource(filePath.toUri());
+            try (Stream<Path> files = Files.list(storageDir)) {
+                Optional<Path> matchingFile = files
+                        .filter(path -> path.getFileName().toString().startsWith(id + "."))
+                        .findFirst();
 
-        } catch (MalformedURLException | FileNotFoundException e) {
-            throw new RuntimeException("Failed to load document: " + e.getMessage(), e);
+                if (matchingFile.isEmpty()) {
+                    throw new FileNotFoundException("Aucun document trouvé pour l'ID : " + id);
+                }
+
+                return new UrlResource(matchingFile.get().toUri());
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors du chargement du document : " + e.getMessage(), e);
         }
     }
 }

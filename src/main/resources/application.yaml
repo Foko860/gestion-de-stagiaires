@@ -27,6 +27,13 @@ spring:
           starttls:
             enable: true
 
+gestionstagiaire:
+  cors:
+    allowed-origins:
+      - "*"
+    allowed-methods: "GET,POST,PUT,DELETE"
+    allowed-headers: "*"
+
 server:
   servlet:
     context-path: /api/internship-management/v1

@@ -64,7 +64,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SupervisorDTO'
-
   /supervisors/{id}:
     get:
       tags:

@@ -25,20 +25,25 @@ public interface SupervisorMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "companyRole", source = "companyRole")
-       Supervisor toSupervisor(SupervisorRegistrationRequestDTO dto);
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "dateOfBirth", source = "dateOfBirth")
+    @Mapping(target = "gender", source = "gender")
+    @Mapping(target = "phoneNumber", source = "phoneNumber")
+    @Mapping(target = "password", source = "password")
+    Supervisor toSupervisor(SupervisorRegistrationRequestDTO dto);
 
     // ----- Mapping Supervisor vers DTO -----
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "companyRole", source = "companyRole")
-       SupervisorDTO toDTO(Supervisor supervisor);
+    SupervisorDTO toDTO(Supervisor supervisor);
 
     // ----- Update partiel -----
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "name", source = "name")
     @Mapping(target = "companyRole", source = "companyRole")
-       void copyDataFromUpdateUserDTOToUser(UpdateSupervisorDTO updateSupervisorDTO, @MappingTarget Supervisor supervisor);
+    void copyDataFromUpdateUserDTOToUser(UpdateSupervisorDTO updateSupervisorDTO, @MappingTarget Supervisor supervisor);
 
     // ----- Mapping PhoneNumberDTO vers PhoneNumber -----
     @Named("fromPhoneNumberDTOToPhoneNumber")

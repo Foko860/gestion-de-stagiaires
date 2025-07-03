@@ -57,7 +57,6 @@ public  class SupervisorController implements  SupervisorApi {
 
     @Override
     public ResponseEntity<SupervisorDTO> getSupervisorById(UUID id) {
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(supervisorService.getSupervisorById(id));

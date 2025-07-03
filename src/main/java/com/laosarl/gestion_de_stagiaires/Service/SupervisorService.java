@@ -30,16 +30,12 @@ public class SupervisorService {
     //TODO: add the admin creator in process of supervisor creation
     public SupervisorIdResponseDTO createSupervisor(SupervisorRegistrationRequestDTO supervisorRegistrationRequestDTO,
                                                     String username) {
-        Supervisor supervisor = new Supervisor();
 
-        supervisor.setName(supervisorRegistrationRequestDTO.getName());
-        supervisor.setCompanyRole(supervisorRegistrationRequestDTO.getCompanyRole());
-        supervisor.setRole(Role.SUPERVISOR); // On lui donne le rôle SUPERVISOR
-
+        Supervisor supervisor = supervisorMapper.toSupervisor(supervisorRegistrationRequestDTO);
+        supervisor.setCreatedBy(username);
         Supervisor saved = supervisorRepository.save(supervisor);
 
         log.info("New Supervisor created with ID: {}", saved.getId());
-
         return new SupervisorIdResponseDTO().value(saved.getId());
     }
 
@@ -65,6 +61,7 @@ public class SupervisorService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public SupervisorDTO getSupervisorById(UUID id) {
         return supervisorRepository.findById(id)
                 .map(supervisorMapper::toDTO)

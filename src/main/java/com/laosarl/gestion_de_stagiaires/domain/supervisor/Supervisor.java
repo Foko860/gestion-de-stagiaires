@@ -22,5 +22,6 @@ public class Supervisor extends User {
     @Column(name = "role_in_company")
     private String companyRole;
 
-
+    @Column(name = "created_by")
+    private String createdBy;
 }

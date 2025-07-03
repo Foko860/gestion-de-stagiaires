@@ -49,12 +49,6 @@ public class SecurityConfig {
                         requestMatcherConfigurer ->
                                 requestMatcherConfigurer
                                         .requestMatchers(HttpMethod.POST, "/auth/login")
-                                        .requestMatchers(HttpMethod.POST, "/register/supervisor")
-                                        .requestMatchers(HttpMethod.GET, "/supervisors")
-                                        .requestMatchers(HttpMethod.GET, "/supervisors/{id}")
-                                        .requestMatchers(HttpMethod.PUT, "/supervisors/{id}")
-                                        .requestMatchers(HttpMethod.DELETE, "/supervisors/{id}")
-
                                         .requestMatchers(HttpMethod.POST, "/internship")
                                         .requestMatchers(HttpMethod.GET, "/internship")
                                         .requestMatchers(HttpMethod.GET, "/internship/{internshipId}")
@@ -72,12 +66,6 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.GET, "/supervisors").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.GET, "/supervisors/{id}").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.PUT, "/supervisors/{id}").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.DELETE, "/supervisors/{id}").hasRole("ADMIN")
-
                                         .requestMatchers(HttpMethod.POST, "/internship").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/internship").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.GET, "/internship/{internshipId}").permitAll()
@@ -86,19 +74,10 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/accept").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/reject").hasRole("ADMIN")
                                         .requestMatchers(HttpMethod.POST, "/internship/{internshipId}/assign-supervisor").hasRole("ADMIN")
-
-
                                         .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/documents/download/{id}").hasRole("ADMIN")
 
                 )
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                        .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler(logoutService)
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()))
                 .build();
     }
 
@@ -109,7 +88,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) ->
                         authz
-                                .requestMatchers(HttpMethod.GET, "/auth/user").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.GET, "/supervisors").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.GET, "/supervisors/{id}").hasRole(Role.ADMIN.name())
                                 .anyRequest().denyAll()
                 )
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

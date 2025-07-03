@@ -31,7 +31,7 @@ public class DocumentService {
     public CreatedDocumentIdDTO createDocument(MultipartFile file) {
         try {
             Document document = Document.builder()
-                    .originalFilename(file.getOriginalFilename())
+                    .originalFilename("")
                     .fileSize(file.getSize())
                     .contentType(file.getContentType())
                     .build();

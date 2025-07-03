@@ -33,7 +33,6 @@ public class AdminService implements UserDetailsService {
         }
 
         String token = jwtService.generateToken(admin);
-
         TokenDTO tokenDTO = new TokenDTO().value(token);
 
         return ResponseEntity.ok(tokenDTO);

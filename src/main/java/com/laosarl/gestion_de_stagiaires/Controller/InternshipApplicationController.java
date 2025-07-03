@@ -21,7 +21,6 @@ public class InternshipApplicationController implements InternshipApplicationApi
 
     @Override
     public ResponseEntity<Void> acceptInternship(UUID internshipId) {
-
         internshipApplicationService.acceptInternship(internshipId, CurrentUser.getUsername());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -50,7 +49,7 @@ public class InternshipApplicationController implements InternshipApplicationApi
     public ResponseEntity<InternshipApplicationDTO> getInternshipApplicationById(UUID internshipId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(internshipApplicationService.getById(internshipId));
+                .body(internshipApplicationService.getInternshipApplicationById(internshipId));
     }
 
     @Override

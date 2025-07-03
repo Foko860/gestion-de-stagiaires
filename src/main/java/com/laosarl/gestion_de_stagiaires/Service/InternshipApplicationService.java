@@ -56,7 +56,7 @@ public class InternshipApplicationService {
 
     // ✅ Récupérer une candidature par ID
     @Transactional(readOnly = true)
-    public InternshipApplicationDTO getById(UUID internshipId) {
+    public InternshipApplicationDTO getInternshipApplicationById(UUID internshipId) {
         return internshipApplicationRepository.findById(internshipId)
                 .map(internshipApplicationMapper::toResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Internship Application Not found"));
@@ -74,7 +74,6 @@ public class InternshipApplicationService {
         InternshipApplication internshipApplication = internshipApplicationRepository.findById(internshipId)
                 .orElseThrow(() -> new ResourceNotFoundException("Internship Application Not found"));
         Admin admin = adminRepository.findByEmail(username).orElseThrow();
-
 
         internshipApplication.markHasAccept(admin);
         internshipApplicationRepository.save(internshipApplication);
@@ -121,7 +120,7 @@ public class InternshipApplicationService {
     @Transactional
     public void assignSupervisor(UUID internshipId, UUID supervisorId, String username) {
         InternshipApplication internshipApplication = internshipApplicationRepository.findById(internshipId)
-                .orElseThrow(() -> new EntityNotFoundException("Internship application not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Internship application not found"));
         Supervisor supervisor = supervisorRepository.findById(supervisorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Supervisor not found"));
         Admin admin = adminRepository.findByEmail(username).orElseThrow();

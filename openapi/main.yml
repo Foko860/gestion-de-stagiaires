@@ -182,7 +182,7 @@ paths:
         '404':
           description: Internship application not found
   /internship/{internshipId}/accept:
-    post:
+    put:
       summary: Accepter une candidature
       operationId: acceptInternship
       tags:
@@ -201,7 +201,7 @@ paths:
         '404':
           description: Candidature non trouvée
   /internship/{internshipId}/reject:
-    post:
+    put:
       summary: Refuser une candidature
       operationId: rejectInternshipById
       tags:
@@ -227,7 +227,7 @@ paths:
         '404':
           description: Candidature non trouvée
   /internship/{internshipId}/assign-supervisor:
-    post:
+    put:
       tags:
         - InternshipApplication
       summary: Assign a supervisor to an accepted internship application
@@ -502,7 +502,7 @@ components:
           enum: [ PUBLISHED, ACCEPTED, REJECTED, ASSIGN ]
         submissionDate:
           type: string
-          format: date
+          format: datetime
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumberDTO'
     UpdateInternshipApplicationDTO:

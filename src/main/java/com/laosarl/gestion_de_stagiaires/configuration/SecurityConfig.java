@@ -74,6 +74,7 @@ public class SecurityConfig {
                         authz
                                 .requestMatchers(HttpMethod.POST, "/register/supervisor").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.GET, "/supervisors").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.GET,"/internship").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.GET, "/supervisors/{id}").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.GET, "/internship/{internshipId}").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.PUT, "/internship/{internshipId}/accept").hasRole(Role.ADMIN.name())

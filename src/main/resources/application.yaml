@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: ${DB_DDL_AUTO:update}
+      ddl-auto: ${DB_DDL_AUTO:create-drop}
     properties:
       hibernate:
         dialect: "org.hibernate.dialect.PostgreSQLDialect"
@@ -29,9 +29,8 @@ spring:
 
 gestionstagiaire:
   cors:
-    allowed-origins:
-      - "*"
-    allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+    allowed-origins: "*"
+    allowed-methods: "*"
     allowed-headers: "*"
 
 server:

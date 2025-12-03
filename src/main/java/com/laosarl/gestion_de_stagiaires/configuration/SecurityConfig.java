@@ -45,24 +45,16 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicEndpoints(HttpSecurity http) throws Exception {
         log.info("Public filter chain start");
-        return http.securityMatchers(
-                        requestMatcherConfigurer ->
-                                requestMatcherConfigurer
-                                        .requestMatchers(HttpMethod.POST, "/auth/login")
-                                        .requestMatchers(HttpMethod.POST, "/internship")
-                                        .requestMatchers(HttpMethod.POST, "/documents/upload")
-                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}")
-                )
+        http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        authorizationManagerRequestMatcherRegistry ->
-                                authorizationManagerRequestMatcherRegistry
-                                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/internship").permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}").permitAll()
-                )
-                .build();
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/internship").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/documents/download/**").permitAll()
+                        .anyRequest().authenticated()
+                );
+        return http.build();
     }
 
     @Bean
@@ -76,6 +68,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/supervisors").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.GET,"/internship").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.GET, "/supervisors/{id}").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE, "/supervisors/{id}").hasRole(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT, "/supervisors/{id}").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.GET, "/internship/{internshipId}").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.PUT, "/internship/{internshipId}/accept").hasRole(Role.ADMIN.name())
                                 .requestMatchers(HttpMethod.PUT, "/internship/{internshipId}/reject").hasRole(Role.ADMIN.name())
@@ -106,8 +100,3 @@ public class SecurityConfig {
                 .build();
     }
 }
-
-
-
-
-

@@ -2,7 +2,8 @@ version: '3.9'
 
 services:
   postgres-db:
-    image: postgres:15
+    image: postgres:16-alpine
+    container_name: postgres-stage
     environment:
       POSTGRES_DB: gestion_de_stage
       POSTGRES_USER: root
@@ -16,26 +17,40 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    command: postgres -c log_statement=all -c log_destination=stderr
 
   backend:
     image: aurellefoko/gestion_stagiaire:latest
+    container_name: gestion-stagiaire-api
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/gestion_de_stage
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: F@KO1ALK
-      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
     ports:
-      - "8185:8185"
+      - "8185:8080"
     depends_on:
       postgres-db:
         condition: service_healthy
     restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@stage.com
       PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "5050:80"
     depends_on:
@@ -45,3 +60,4 @@ services:
 
 volumes:
   postgres_data:
+    name: postgres_stage_data

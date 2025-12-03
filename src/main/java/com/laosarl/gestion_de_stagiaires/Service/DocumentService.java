@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class DocumentService {
 
-    private static final Path STORAGE_DIR = Paths.get("resources/documents");
+    private static final Path STORAGE_DIR = Paths.get("storage/documents");
 
     private final DocumentRepository documentRepository;
 
@@ -47,15 +47,12 @@ public class DocumentService {
 
             Document savedDocument = documentRepository.save(document);
 
-            Path storageDir = Paths.get("storage", "documents");
-
-            if (!Files.exists(storageDir)) {
-                Files.createDirectories(storageDir);
+            if (!Files.exists(STORAGE_DIR)) {
+                Files.createDirectories(STORAGE_DIR);
             }
 
             String fileExtension = getFileExtension(originalFilename, file.getContentType());
-
-            Path targetPath = storageDir.resolve(savedDocument.getId().toString() + fileExtension);
+            Path targetPath = STORAGE_DIR.resolve(savedDocument.getId().toString() + fileExtension);
 
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
@@ -68,14 +65,14 @@ public class DocumentService {
         }
     }
 
-
     private String getFileExtension(String originalFilename, String contentType) {
         if (originalFilename != null && originalFilename.contains(".")) {
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            if (extension.length() > 1) {
+            if (!extension.isBlank()) {
                 return extension;
             }
         }
+
         if (contentType != null) {
             return switch (contentType.toLowerCase()) {
                 case "application/pdf" -> ".pdf";
@@ -85,19 +82,18 @@ public class DocumentService {
                 default -> ".bin";
             };
         }
+
         return ".bin";
     }
 
     @Transactional(readOnly = true)
     public Resource downloadDocument(String id) {
         try {
-            Path storageDir = Paths.get("storage", "documents");
-
-            if (!Files.exists(storageDir)) {
+            if (!Files.exists(STORAGE_DIR)) {
                 throw new FileNotFoundException("Répertoire de stockage inexistant.");
             }
 
-            try (Stream<Path> files = Files.list(storageDir)) {
+            try (Stream<Path> files = Files.list(STORAGE_DIR)) {
                 Optional<Path> matchingFile = files
                         .filter(path -> path.getFileName().toString().startsWith(id + "."))
                         .findFirst();

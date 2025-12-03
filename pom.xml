@@ -29,8 +29,8 @@
 	<properties>
 		<java.version>21</java.version>
 		<docker.image.prefix>aurellefoko/gestion_stagiaire</docker.image.prefix>
-		<jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
-	</properties>
+        <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
+    </properties>
 	<dependencies>
 
 

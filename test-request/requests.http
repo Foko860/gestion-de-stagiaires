@@ -1,0 +1,171 @@
+###
+# S'authentifier
+###
+
+# @name login
+POST http://localhost:8185/api/internship-management/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "adminkenneth@gmail.com",
+  "password": "password1"
+}
+
+> {%
+    // Sauvegarde du token dans la variable "jwt_token"
+    client.global.set("jwt_token", response.body.value);
+%}
+
+###
+# Features pour Supervisor
+###
+
+# @name createSupervisor
+POST http://localhost:8185/api/internship-management/v1/register/supervisor
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "email": "supervisor@example.com",
+  "password": "password",
+  "name": "John Doe",
+  "dateOfBirth": "1980-01-01",
+  "gender": "MALE",
+  "phoneNumber": {
+    "number": "677889900",
+    "countryCode": "237"
+  },
+  "companyRole": "Manager"
+}
+
+> {%
+    // Sauvegarde du Supervisor id qui a ete cree dans la variable "supervisorId"
+    client.global.set("supervisorId", response.body.value);
+%}
+
+###
+
+# @name getAllSupervisors
+GET http://localhost:8185/api/internship-management/v1/supervisors
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# @name getSupervisorById
+GET http://localhost:8185/api/internship-management/v1/supervisors/{{supervisorId}}
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# @name updateSupervisor
+PUT http://localhost:8185/api/internship-management/v1/supervisors/{{supervisorId}}
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "name": "John Doe Updated",
+  "companyRole": "Senior Manager"
+}
+
+###
+
+# @name deleteSupervisor
+DELETE http://localhost:8185/api/internship-management/v1/supervisors/{{supervisorId}}
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# Features pour InternshipApplication
+###
+
+# @name createInternshipApplication
+POST http://localhost:8185/api/internship-management/v1/internship
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "studyLevel": "Master",
+  "speciality": "Software Engineering",
+  "university": "University of Example",
+  "documentId": "d8c11fe6-fc3b-4815-ae63-726d84c15cd0",
+  "startDate": "2025-06-01",
+  "endDate": "2025-09-01",
+  "phoneNumber": {
+    "number": "612345678",
+    "countryCode": "237"
+  },
+  "email": "jane.doe@example.com"
+}
+
+> {%
+    // Sauvegarde du token dans la variable "jwt_token"
+    client.global.set("internshipId", response.body.value);
+%}
+
+###
+
+# @name getAllInternshipApplications
+GET http://localhost:8185/api/internship-management/v1/internship
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# @name getInternshipApplicationById
+GET http://localhost:8185/api/internship-management/v1/internship/{{internshipId}}
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# @name acceptInternship
+PUT http://localhost:8185/api/internship-management/v1/internship/{{internshipId}}/accept
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# @name rejectInternship
+PUT http://localhost:8185/api/internship-management/v1/internship/{{internshipId}}/reject
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "description": "Not a good fit for the team."
+}
+
+###
+
+# @name assignSupervisor
+PUT http://localhost:8185/api/internship-management/v1/internship/{{internshipId}}/assign-supervisor
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "id": "{{supervisorId}}"
+}
+
+###
+# Features liées au Document
+###
+
+# @name uploadDocument
+POST http://localhost:8185/api/internship-management/v1/documents/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="cv.pdf"
+Content-Type: application/pdf
+
+< ./Buchungssatz_2025_07_21.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+> {%
+    // Sauvegarde de l'ID du document dans la variable "documentId"
+    client.global.set("documentId", response.body.id);
+%}
+
+###
+
+# @name downloadDocument
+GET http://localhost:8185/api/internship-management/v1/documents/download/{{documentId}}
+Authorization: Bearer {{jwt_token}}
+Accept: application/pdf

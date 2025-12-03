@@ -44,6 +44,9 @@ public abstract class EntityBase {
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     @PrePersist
     private void prePersist() {
         creationDate = LocalDateTime.now();

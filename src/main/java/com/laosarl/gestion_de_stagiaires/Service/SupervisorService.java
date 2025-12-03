@@ -2,6 +2,7 @@ package com.laosarl.gestion_de_stagiaires.Service;
 
 import com.laosarl.gestion_de_stagiaires.Repository.SupervisorRepository;
 import com.laosarl.gestion_de_stagiaires.Service.mapper.SupervisorMapper;
+import com.laosarl.gestion_de_stagiaires.domain.common.EntityBase;
 import com.laosarl.gestion_de_stagiaires.domain.supervisor.Supervisor;
 import com.laosarl.gestion_de_stagiaires.domain.user.Role;
 import com.laosarl.gestion_de_stagiaires.exceptions.ResourceNotFoundException;
@@ -57,6 +58,7 @@ public class SupervisorService {
 
     public List<SupervisorDTO> getAllSupervisors() {
         return supervisorRepository.findAll().stream()
+                .filter(supervisor -> !supervisor.isDeleted())
                 .map(supervisorMapper::toDTO)
                 .toList();
     }
@@ -64,6 +66,7 @@ public class SupervisorService {
     @Transactional(readOnly = true)
     public SupervisorDTO getSupervisorById(UUID id) {
         return supervisorRepository.findById(id)
+                .filter(supervisor -> !supervisor.isDeleted())
                 .map(supervisorMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Student with id " + id + " not found"));
     }

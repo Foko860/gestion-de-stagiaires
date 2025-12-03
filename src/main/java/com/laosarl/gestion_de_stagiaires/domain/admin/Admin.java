@@ -4,6 +4,8 @@ import com.laosarl.gestion_de_stagiaires.domain.common.EntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SQLDelete(sql = "UPDATE admins SET deleted = true WHERE id = ? and version = ?")
+@Where(clause = "deleted = false")
 public class Admin extends EntityBase implements UserDetails {
 
     private String name;

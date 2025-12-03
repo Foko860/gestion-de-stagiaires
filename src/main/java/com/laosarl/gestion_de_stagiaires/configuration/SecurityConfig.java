@@ -45,16 +45,24 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicEndpoints(HttpSecurity http) throws Exception {
         log.info("Public filter chain start");
-        http
+        return http.securityMatchers(
+                        requestMatcherConfigurer ->
+                                requestMatcherConfigurer
+                                        .requestMatchers(HttpMethod.POST, "/auth/login")
+                                        .requestMatchers(HttpMethod.POST, "/internship")
+                                        .requestMatchers(HttpMethod.POST, "/documents/upload")
+                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}")
+                )
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/internship").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/documents/download/**").permitAll()
-                        .anyRequest().authenticated()
-                );
-        return http.build();
+                .authorizeHttpRequests(
+                        authorizationManagerRequestMatcherRegistry ->
+                                authorizationManagerRequestMatcherRegistry
+                                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/internship").permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/documents/download/{id}").permitAll()
+                )
+                .build();
     }
 
     @Bean
